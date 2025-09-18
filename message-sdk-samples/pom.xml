@@ -10,33 +10,11 @@
     </parent>
 
     <artifactId>message-sdk-samples</artifactId>
+    <packaging>pom</packaging>
 
-    <properties>
-        <maven.compiler.source>${target.java.version}</maven.compiler.source>
-        <maven.compiler.target>${target.java.version}</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
+    <modules>
+        <module>sample-tencent</module>
+    </modules>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.xiangxi.message</groupId>
-            <artifactId>message-sdk-email</artifactId>
-            <version>${revision}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.xiangxi.message</groupId>
-            <artifactId>message-sdk-push</artifactId>
-            <version>${revision}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.xiangxi.message</groupId>
-            <artifactId>message-sms-tencent</artifactId>
-            <version>${revision}</version>
-        </dependency>
 
-        <dependency>
-            <groupId>com.xiangxi.message</groupId>
-            <artifactId>message-sdk-factory</artifactId>
-        </dependency>
-    </dependencies>
 </project>

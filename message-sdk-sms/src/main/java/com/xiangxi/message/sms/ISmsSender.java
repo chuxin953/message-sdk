@@ -1,7 +1,7 @@
 package com.xiangxi.message.sms;
 
 
-import com.xiangxi.message.core.MessageSender;
+import com.xiangxi.message.api.MessageSender;
 import com.xiangxi.message.sms.model.SmsResponse;
 
 /**

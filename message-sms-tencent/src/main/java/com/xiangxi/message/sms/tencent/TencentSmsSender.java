@@ -16,7 +16,7 @@ import com.xiangxi.message.sms.model.SmsResponse;
  * @author 初心
  * Create by on 2025/9/16 15:45 17
  */
-public class TencentSmsSender implements ISmsSender<TencentSmsConfig, SmsRequest> {
+public class TencentSmsSender implements ISmsSender<TencentSmsConfig, TencentSmsRequest> {
 
     @Override
     public String type() {
@@ -29,7 +29,7 @@ public class TencentSmsSender implements ISmsSender<TencentSmsConfig, SmsRequest
     }
 
     @Override
-    public SmsResponse send(TencentSmsConfig config, SmsRequest message) throws MessageSendException {
+    public SmsResponse send(TencentSmsConfig config, TencentSmsRequest message) throws MessageSendException {
         try {
             // 构建凭证
             Credential cred = new Credential(config.getAppId(), config.getAppKey());
@@ -42,7 +42,7 @@ public class TencentSmsSender implements ISmsSender<TencentSmsConfig, SmsRequest
             // 模版id
             request.setTemplateId(config.getTemplateId());
             // 发送给谁
-            request.setPhoneNumberSet(new String[]{message.getPhone()});
+            request.setPhoneNumberSet(message.getPhoneNumberSet());
             // 国内需要设置签名
             request.setSignName(config.getSign());
             // 模版参数替换

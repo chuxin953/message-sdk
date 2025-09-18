@@ -19,7 +19,7 @@
     <description>messaging-sdk</description>
     <modules>
         <module>message-dependencies</module>
-        <module>message-sdk-core</module>
+        <module>message-sdk-api</module>
         <module>message-sdk-common</module>
         <module>message-sdk-sms</module>
         <module>message-sdk-email</module>
@@ -27,11 +27,7 @@
         <module>message-sdk-samples</module>
         <module>message-sms-tencent</module>
         <module>message-sms-sangfor</module>
-        <module>message-sdk-factory</module>
-        <module>message-sdk-sms-starter</module>
-        <module>message-sdk-push-starter</module>
-        <module>message-sdk-email-starter</module>
-        <module>message-sdk-starter</module>
+        <module>message-sdk-manager</module>
     </modules>
 
     <build>

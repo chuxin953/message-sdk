@@ -39,7 +39,7 @@
 
             <dependency>
                 <groupId>com.xiangxi.message</groupId>
-                <artifactId>message-sdk-core</artifactId>
+                <artifactId>message-sdk-api</artifactId>
                 <version>${revision}</version>
             </dependency>
 
@@ -50,7 +50,7 @@
             </dependency>
             <dependency>
                 <groupId>com.xiangxi.message</groupId>
-                <artifactId>message-sdk-factory</artifactId>
+                <artifactId>message-sdk-manager</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
@@ -60,27 +60,12 @@
             </dependency>
             <dependency>
                 <groupId>com.xiangxi.message</groupId>
+                <artifactId>message-sdk-email</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.xiangxi.message</groupId>
                 <artifactId>message-sdk-push</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.xiangxi.message</groupId>
-                <artifactId>message-sdk-starter</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.xiangxi.message</groupId>
-                <artifactId>message-sdk-sms-starter</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.xiangxi.message</groupId>
-                <artifactId>message-sdk-push-starter</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.xiangxi.message</groupId>
-                <artifactId>message-sdk-email-starter</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>
