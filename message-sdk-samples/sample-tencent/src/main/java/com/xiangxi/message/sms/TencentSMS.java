@@ -28,7 +28,7 @@ public class TencentSMS {
 
             // 2️⃣ 构建请求
             TencentSmsRequest request = TencentSmsRequest.builder()
-                    .addPhone("+8618227969191") // 手机号
+                    .addPhone("+8615384456055") // 手机号
                     .addParams("234567")// 测试手机号，注意加国家码
                     .build();
 

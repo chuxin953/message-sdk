@@ -26,12 +26,13 @@ public class MessageSenderManager {
         loader.forEach(sender -> {
             String key = sender.type() + ":" + sender.channel();
             if (senderMap.containsKey(key)) {
-                throw new IllegalStateException("Duplicate ISmsSender for type: " + key);
+                throw new IllegalStateException("Duplicate MessageSender for type: " + key);
             }
-            senderMap.put(key, sender);
+            // 包装日志，泛型安全
+            senderMap.put(key, new LoggingSenderDecorator<>(sender));
         });
         if (senderMap.isEmpty()) {
-            System.out.println("Warning: No ISmsSender implementations found via SPI");
+            System.out.println("Warning: No MessageSender implementations found via SPI");
         }
         initialized = true;
     }

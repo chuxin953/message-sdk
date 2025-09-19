@@ -14,9 +14,12 @@
         <target.java.version>21</target.java.version>
         <maven.compiler.source>${target.java.version}</maven.compiler.source>
         <maven.compiler.target>${target.java.version}</maven.compiler.target>
-        <fastjson.version>1.2.83</fastjson.version>
+        <fastjson.version>2.0.28</fastjson.version>
         <okhttp.version>4.12.0</okhttp.version>
         <tencentcloud-sdk.version>3.1.1281</tencentcloud-sdk.version>
+        <slf4j.version>2.0.17</slf4j.version>
+        <lombok.version>1.18.34</lombok.version>
+        <logback.version>1.5.13</logback.version>
     </properties>
 
     <dependencyManagement>
@@ -73,21 +76,26 @@
                 <artifactId>message-sms-tencent</artifactId>
                 <version>${revision}</version>
             </dependency>
+
             <dependency>
-                <groupId>com.xiangxi.message</groupId>
-                <artifactId>message-sms-sangfor</artifactId>
-                <version>${revision}</version>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.34</version>
-        </dependency>
-    </dependencies>
 
 
 </project>
