@@ -3,6 +3,7 @@ package com.xiangxi.message.log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -23,7 +24,7 @@ public class MessageEventPublisher {
 
 
     // 私有构造函数，防止外部创建
-    public MessageEventPublisher() {
+    private MessageEventPublisher() {
         int threads = Math.max(2, Runtime.getRuntime().availableProcessors());
         this.executor = new ThreadPoolExecutor(
                 threads,
@@ -52,11 +53,14 @@ public class MessageEventPublisher {
      * 注册监听器，自动去重
      */
     public <E> void register(Class<E> eventType, EventListener<E> listener) {
+        Objects.requireNonNull(eventType, "eventType must not be null");
+        Objects.requireNonNull(listener, "listener must not be null");
         listeners.add(new TypedListener<>(eventType, listener));
         log.debug("Registered listener {} for event {}", listener.getClass().getSimpleName(), eventType.getSimpleName());
     }
 
     public <E> void unregister(EventListener<E> listener) {
+        Objects.requireNonNull(listener, "listener must not be null");
         listeners.removeIf(l -> l.listener.equals(listener));
         log.debug("Unregistered listener {}", listener.getClass().getSimpleName());
     }
@@ -65,9 +69,26 @@ public class MessageEventPublisher {
      * 发布事件（异步执行）
      */
     public <E> void publish(E event) {
-        for (TypedListener<?> listener : listeners) {
-            executor.submit(() -> listener.handle(event));
+        Objects.requireNonNull(event, "event must not be null");
+        if (listeners.isEmpty()) {
+            return;
         }
+        for (TypedListener<?> listener : listeners) {
+            executor.submit(() -> {
+                try {
+                    listener.handle(event);
+                } catch (Throwable t) {
+                    log.warn("Event listener execution failed: {}", t.getMessage(), t);
+                }
+            });
+        }
+    }
+
+    /**
+     * 优雅关闭线程池
+     */
+    public void shutdown() {
+        executor.shutdown();
     }
 
     /**

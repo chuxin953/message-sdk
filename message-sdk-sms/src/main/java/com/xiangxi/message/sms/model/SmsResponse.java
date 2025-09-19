@@ -12,10 +12,10 @@ package com.xiangxi.message.sms.model;
  * </p>
  * <pre>{@code
  * // 成功响应
- * SmsResponse success = new SmsResponse(true, "msg_12345", null);
+ * SmsResponse success = SmsResponse.success("msg_12345");
  * 
  * // 失败响应
- * SmsResponse failure = new SmsResponse(false, null, "Invalid phone number");
+ * SmsResponse failure = SmsResponse.failure("Invalid phone number");
  * 
  * // 检查发送结果
  * if (response.success()) {
@@ -62,4 +62,31 @@ public record SmsResponse(
      */
     String error
 ) {
+    /**
+     * 成功工厂方法
+     */
+    public static SmsResponse success(String messageId) {
+        return new SmsResponse(true, messageId, null);
+    }
+
+    /**
+     * 失败工厂方法
+     */
+    public static SmsResponse failure(String error) {
+        return new SmsResponse(false, null, error);
+    }
+
+    /**
+     * 约束校验：
+     * - 成功时不应包含错误信息
+     * - 失败时必须包含错误信息
+     */
+    public SmsResponse {
+        if (success && error != null) {
+            throw new IllegalArgumentException("success=true 时 error 必须为 null");
+        }
+        if (!success && (error == null || error.isBlank())) {
+            throw new IllegalArgumentException("success=false 时必须提供错误信息");
+        }
+    }
 }

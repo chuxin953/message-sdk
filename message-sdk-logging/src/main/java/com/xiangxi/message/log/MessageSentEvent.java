@@ -9,5 +9,8 @@ public record MessageSentEvent(
         String type,
         String channel,
         Object message,
-        Object result
+        Object result,
+        long timestamp,
+        String traceId,
+        long costMs
 ) {}

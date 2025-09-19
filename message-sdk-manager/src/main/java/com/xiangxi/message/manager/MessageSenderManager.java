@@ -5,12 +5,17 @@ import com.xiangxi.message.api.MessageSender;
 import com.xiangxi.message.common.exception.MessageSendException;
 import com.xiangxi.message.log.MessageEventPublisher;
 import com.xiangxi.message.log.MessageSentEvent;
+import com.xiangxi.message.log.MessageSendFailedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 统一入口
@@ -48,7 +53,7 @@ public class MessageSenderManager {
      */
     private static final Map<String, MessageSender<?,?,?>> senderMap = new ConcurrentHashMap<>();
 
-    private static final MessageEventPublisher event = new MessageEventPublisher();
+    private static final MessageEventPublisher event = MessageEventPublisher.getInstance();
     private static final Logger log = LoggerFactory.getLogger(MessageSenderManager.class);
 
 
@@ -59,7 +64,7 @@ public class MessageSenderManager {
 
         ServiceLoader<MessageSender> loader = ServiceLoader.load(MessageSender.class);
         loader.forEach(sender -> {
-            String key = sender.type() + ":" + sender.channel();
+            String key = sender.routeKey();
             if (senderMap.containsKey(key)) {
                 throw new IllegalStateException("Duplicate MessageSender for type: " + key);
             }
@@ -86,6 +91,9 @@ public class MessageSenderManager {
     @SuppressWarnings("unchecked")
     public static <C, M, R> MessageSender<C, M, R> getSender(String type, String channel) {
         if (!initialized) init();
+        if (type == null || type.isBlank() || channel == null || channel.isBlank()) {
+            throw new IllegalArgumentException("type/channel must not be blank");
+        }
         String key = type + ":" + channel;
         MessageSender<?, ?, ?> sender = senderMap.get(key);
         if (sender == null) {
@@ -101,7 +109,7 @@ public class MessageSenderManager {
      */
     public static Map<String, MessageSender<?, ?, ?>> getAllSenders() {
         if (!initialized) init();
-        return senderMap;
+        return Collections.unmodifiableMap(senderMap);
     }
 
     /**
@@ -119,8 +127,24 @@ public class MessageSenderManager {
      */
     public static <C, M, R> R send(String type, String channel, C config, M message) throws MessageSendException {
         MessageSender<C, M, R> sender = getSender(type, channel);
-        R result = sender.send(config, message);
-        event.publish(new MessageSentEvent(sender, sender.type(), sender.channel(), message, result));
-        return result;
+        Objects.requireNonNull(config, "config must not be null");
+        Objects.requireNonNull(message, "message must not be null");
+        long start = System.nanoTime();
+        String traceId = MDC.get("traceId");
+        long timestamp = System.currentTimeMillis();
+        try {
+            R result = sender.send(config, message);
+            long costMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
+            event.publish(new MessageSentEvent(sender, sender.type(), sender.channel(), message, result, timestamp, traceId, costMs));
+            return result;
+        } catch (MessageSendException e) {
+            long costMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
+            event.publish(new MessageSendFailedEvent(sender, sender.type(), sender.channel(), message, e, timestamp, traceId, costMs));
+            throw e;
+        } catch (RuntimeException e) { // 兜底：确保运行时异常也能观测到
+            long costMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
+            event.publish(new MessageSendFailedEvent(sender, sender.type(), sender.channel(), message, e, timestamp, traceId, costMs));
+            throw e;
+        }
     }
 }

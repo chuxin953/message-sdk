@@ -57,15 +57,21 @@ public class TencentSmsSender implements ISmsSender<TencentSmsConfig, TencentSms
 
             SendSmsResponse resp = client.SendSms(request);
             // 返回结果
-            if ("Ok".equalsIgnoreCase(resp.getSendStatusSet()[0].getCode())) {
-                return new SmsResponse(true, resp.getSendStatusSet()[0].getSerialNo(), null);
+            String code = resp.getSendStatusSet()[0].getCode();
+            String serialNo = resp.getSendStatusSet()[0].getSerialNo();
+            String messageText = resp.getSendStatusSet()[0].getMessage();
+            if ("Ok".equalsIgnoreCase(code)) {
+                return SmsResponse.success(serialNo);
             } else {
-                return new SmsResponse(false, null, resp.getSendStatusSet()[0].getMessage());
+                return SmsResponse.failure(messageText != null ? messageText : code);
             }
         } catch (ValidationException e) {
-            throw new MessageSendException("参数校验失败: " + e.getMessage(), e);
+            throw new MessageSendException("参数校验失败: " + e.getMessage(), e, "VALIDATION_ERROR", type(), channel());
         } catch (TencentCloudSDKException e) {
-            throw new MessageSendException("Tencent SMS send failed", e);
+            throw new MessageSendException("Tencent SMS send failed", e, "TENCENT_SDK_ERROR", type(), channel());
+        } catch (RuntimeException e) {
+            // 兜底防御，避免意外 NPE 等导致未包装抛出
+            throw new MessageSendException("Unexpected error when sending SMS", e, "UNEXPECTED_ERROR", type(), channel());
         }
     }
 }

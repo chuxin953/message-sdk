@@ -61,6 +61,14 @@ public interface MessageSender<C, M, R> {
      * @see #type()
      */
     String channel();
+
+    /**
+     * 默认路由键，格式：type:channel
+     * 提供统一的键生成，避免各处手写拼接带来的不一致风险。
+     */
+    default String routeKey() {
+        return type() + ":" + channel();
+    }
     
     /**
      * 发送消息
