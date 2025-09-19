@@ -2,6 +2,9 @@ package com.xiangxi.message.manager;
 
 
 import com.xiangxi.message.api.MessageSender;
+import com.xiangxi.message.common.exception.MessageSendException;
+import com.xiangxi.message.log.MessageEventPublisher;
+import com.xiangxi.message.log.MessageSentEvent;
 
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -17,6 +20,9 @@ public class MessageSenderManager {
     // 按 type 缓存 SPI 实现
     private static final Map<String, MessageSender<?,?,?>> senderMap = new ConcurrentHashMap<>();
 
+    private static final MessageEventPublisher event = new MessageEventPublisher();
+
+
     private static boolean initialized = false;
 
     private static synchronized void init(){
@@ -29,7 +35,7 @@ public class MessageSenderManager {
                 throw new IllegalStateException("Duplicate MessageSender for type: " + key);
             }
             // 包装日志，泛型安全
-            senderMap.put(key, new LoggingSenderDecorator<>(sender));
+            senderMap.put(key, sender);
         });
         if (senderMap.isEmpty()) {
             System.out.println("Warning: No MessageSender implementations found via SPI");
@@ -66,4 +72,10 @@ public class MessageSenderManager {
         return senderMap;
     }
 
+    public static <C, M, R> R send(String type, String channel, C config, M message) throws MessageSendException {
+        MessageSender<C, M, R> sender = getSender(type, channel);
+        R result = sender.send(config, message);
+        event.publish(new MessageSentEvent(sender, sender.type(), sender.channel(), message, result));
+        return result;
+    }
 }

@@ -1,7 +1,6 @@
 package com.xiangxi.message.sms;
 
 
-import com.xiangxi.message.api.MessageSender;
 import com.xiangxi.message.common.enums.MessageType;
 import com.xiangxi.message.common.enums.SmsChannel;
 import com.xiangxi.message.manager.MessageSenderManager;
@@ -32,12 +31,8 @@ public class TencentSMS {
                     .addParams("234567")// 测试手机号，注意加国家码
                     .build();
 
-            // 3️⃣ 从 Manager 获取 Sender
-
-            MessageSender<TencentSmsConfig, TencentSmsRequest, SmsResponse> sender =
-                    MessageSenderManager.getSender(MessageType.SMS.name(), SmsChannel.TENCENT_SMS.name());
             // 4️⃣ 调用发送
-            SmsResponse resp = sender.send(config, request);
+            SmsResponse resp = MessageSenderManager.send(MessageType.SMS.name(), SmsChannel.TENCENT_SMS.name(), config, request);
 
             // 5️⃣ 输出结果
             System.out.println("发送成功: " + resp.success());
