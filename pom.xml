@@ -26,7 +26,6 @@
         <module>message-sdk-push</module>
         <module>message-sdk-samples</module>
         <module>message-sms-tencent</module>
-        <module>message-sms-sangfor</module>
         <module>message-sdk-manager</module>
     </modules>
 
