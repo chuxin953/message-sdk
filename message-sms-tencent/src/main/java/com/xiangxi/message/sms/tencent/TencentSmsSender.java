@@ -49,7 +49,7 @@ public class TencentSmsSender implements ISmsSender<TencentSmsConfig, TencentSms
             // 模版id
             request.setTemplateId(config.getTemplateId());
             // 发送给谁
-            request.setPhoneNumberSet(message.getPhoneNumberSet());
+            request.setPhoneNumberSet(message.getPhoneNumberArray());
             // 国内需要设置签名
             request.setSignName(config.getSign());
             // 模版参数替换

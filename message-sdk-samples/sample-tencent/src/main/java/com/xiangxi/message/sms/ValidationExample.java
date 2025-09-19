@@ -21,8 +21,8 @@ public class ValidationExample {
             
             TencentSmsRequest message = TencentSmsRequest.builder()
                 .addPhone("+8613800138000")
-                .addParams("123456")
-                .addParams("5")
+                .addParam("123456")
+                .addParam("5")
                 .build();
             
             // 校验配置
