@@ -30,7 +30,7 @@ public class MessageEventPublisher {
                 threads,
                 threads,
                 60L, TimeUnit.SECONDS,
-                new LinkedBlockingQueue<>(),
+                new LinkedBlockingQueue<>(1000),
                 new ThreadFactory() {
                     private final AtomicInteger count = new AtomicInteger(0);
                     @Override

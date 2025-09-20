@@ -29,10 +29,10 @@ public class MessageLoggingListener implements EventListener<Object> {
         if (!enable) return;
 
         if (event instanceof MessageSentEvent e) {
-            log.info("Message sent | type={} | channel={} | ts={} | traceId={} | costMs={} | message={} | result={}",
+            log.debug("Message sent | type={} | channel={} | ts={} | traceId={} | costMs={} | message={} | result={}",
                     e.type(), e.channel(), e.timestamp(), e.traceId(), e.costMs(), e.message(), e.result());
         } else if (event instanceof MessageSendFailedEvent e) {
-            log.warn("Message send failed | type={} | channel={} | ts={} | traceId={} | costMs={} | message={} | error={}",
+            log.debug("Message send failed | type={} | channel={} | ts={} | traceId={} | costMs={} | message={} | error={}",
                     e.type(), e.channel(), e.timestamp(), e.traceId(), e.costMs(), e.message(), e.error().toString());
         }
     }

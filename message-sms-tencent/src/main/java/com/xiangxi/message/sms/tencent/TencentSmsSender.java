@@ -1,5 +1,6 @@
 package com.xiangxi.message.sms.tencent;
 
+
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.sms.v20210111.SmsClient;
@@ -21,12 +22,12 @@ public class TencentSmsSender implements ISmsSender<TencentSmsConfig, TencentSms
 
     @Override
     public String type() {
-        return MessageType.SMS.name();
+        return MessageType.SMS.getTypeName();
     }
 
     @Override
     public String channel() {
-        return SmsChannel.TENCENT_SMS.name();
+        return SmsChannel.TENCENT_SMS.getChannelName();
     }
 
     @Override
