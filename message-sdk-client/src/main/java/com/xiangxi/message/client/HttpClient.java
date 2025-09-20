@@ -20,6 +20,8 @@ import java.util.function.Supplier;
 public class HttpClient {
     private final HttpConnection connection;
     private final Map<String, String> defaultHeaders;
+    public static final int HTTP_RSP_OK = 200;
+
 
     private HttpClient(Builder builder) {
         this.connection = builder.connectionBuilder.build();
@@ -34,6 +36,10 @@ public class HttpClient {
         try {
             Request request = new  OkHttpRequestAdapter(defaultHeaders).adaptRequest(req);
             Response resp = connection.doRequest(request);
+            if (resp.code() != HTTP_RSP_OK) {
+                String msg = "response code is " + resp.code() + ", not 200";
+                throw new ClientException(msg, "", "ServerSideError");
+            }
             return processResponseJson(resp, clazz);
         }catch (IOException e) {
             throw new ClientException("", e);
