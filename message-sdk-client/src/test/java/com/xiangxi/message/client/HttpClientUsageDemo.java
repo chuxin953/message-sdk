@@ -12,15 +12,13 @@ public class HttpClientUsageDemo {
                     .writeTimeout(5)
                     .callTimeout(10)
                     .defaultHeader("User-Agent", "message-sdk-client-demo/1.0")
-                    .defaultRetries(2) // 失败时最多再重试2次
-                    .defaultRetryBackoff(Duration.ofMillis(300)) // 每次重试之间等待300ms
                     .build();
 
             // 2) 发起一个 GET 请求（按请求覆盖 readTimeout）
             HttpRequest getReq = new HttpRequest("https://httpbin.org/get")
                     .setMethod(HttpMethod.GET)
                     .header("Accept", "application/json");
-            HttpResponse getResp = client.execute(getReq);
+            HttpResponse getResp = client.doRequest(getReq, HttpResponse.class);
             System.out.println("GET status=" + getResp.statusCode());
             System.out.println("GET body=" + getResp.body());
 
@@ -30,7 +28,7 @@ public class HttpClientUsageDemo {
                     .setMethod(HttpMethod.POST)
                     .setContentType("application/json")
                     .setBody(json);
-            HttpResponse postResp = client.execute(postReq);
+            HttpResponse postResp = client.doRequest(postReq, HttpResponse.class);
             System.out.println("POST status=" + postResp.statusCode());
             System.out.println("POST body=" + postResp.body());
 
@@ -38,7 +36,7 @@ public class HttpClientUsageDemo {
             // 注：如果你的网络环境受限，可将 URL 改为实际可访问的服务
             HttpRequest retryReq = new HttpRequest("https://httpbin.org/status/503")
                     .setMethod(HttpMethod.GET);
-            HttpResponse retryResp = client.execute(retryReq);
+            HttpResponse retryResp = client.doRequest(postReq, HttpResponse.class);
             System.out.println("RETRY DEMO status=" + retryResp.statusCode());
             System.out.println("RETRY DEMO body=" + retryResp.body());
         } catch (Exception e) {
