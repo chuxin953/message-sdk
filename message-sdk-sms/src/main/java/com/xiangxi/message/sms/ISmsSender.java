@@ -1,13 +1,11 @@
 package com.xiangxi.message.sms;
 
 import com.xiangxi.message.api.MessageSender;
-import com.xiangxi.message.sms.model.SmsResponse;
 
 /**
  * 短信发送器接口
  * <p>
  * 这是所有短信发送实现的统一接口，继承自{@link MessageSender}核心接口。
- * 该接口固定了响应类型为{@link SmsResponse}，简化了短信发送器的实现。
  * </p>
  * 
  * <p>
@@ -35,8 +33,7 @@ import com.xiangxi.message.sms.model.SmsResponse;
  * @author 初心
  * @since 1.0.0
  * @see MessageSender
- * @see SmsResponse
  */
-public interface ISmsSender<C, M> extends MessageSender<C, M, SmsResponse> {
+public interface ISmsSender<C, M, R> extends MessageSender<C, M, R> {
     // 继承父接口的所有方法，无需额外定义
 }

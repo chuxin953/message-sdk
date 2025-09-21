@@ -74,7 +74,7 @@ public class OkHttpRequestAdapter implements HttpRequestAdapter {
         if (contentType != null && !contentType.isEmpty()) {
             mt = MediaType.parse(contentType);
         }
-        return RequestBody.create(bodyStr, mt);
+        return RequestBody.create(mt, bodyStr);
     }
 
     private RequestBody buildFormBody(Map<String, String> form) {
@@ -104,7 +104,7 @@ public class OkHttpRequestAdapter implements HttpRequestAdapter {
                     mb.addFormDataPart(
                             f.getKey(),
                             f.getValue().getName(),
-                            RequestBody.create(f.getValue(), MediaType.parse("application/octet-stream"))
+                            RequestBody.create(MediaType.parse("application/octet-stream"), f.getValue())
                     );
                 }
             }

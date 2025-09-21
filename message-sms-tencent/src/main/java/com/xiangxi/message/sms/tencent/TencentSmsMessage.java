@@ -1,8 +1,8 @@
 package com.xiangxi.message.sms.tencent;
 
 import com.xiangxi.message.common.validation.Required;
-import lombok.Getter;
 
+import javax.swing.plaf.PanelUI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -54,8 +54,7 @@ import java.util.regex.Pattern;
  * @see com.xiangxi.message.sms.tencent.TencentSmsSender
  * @see com.xiangxi.message.sms.tencent.TencentSmsConfig
  */
-@Getter
-public class TencentSmsRequest {
+public class TencentSmsMessage {
     
     /**
      * 手机号码正则表达式（支持国际格式）
@@ -74,6 +73,10 @@ public class TencentSmsRequest {
      */
     @Required(message = "手机号列表不能为空", fieldName = "手机号列表")
     private final List<String> phoneNumberSet;
+    @Required(message = "模板id不能为空", fieldName = "模板id")
+    private final String templateId;
+
+    private final String action;
     
     /**
      * 短信模板参数列表
@@ -86,9 +89,11 @@ public class TencentSmsRequest {
      * 
      * @param builder 建造者实例
      */
-    private TencentSmsRequest(Builder builder) {
+    private TencentSmsMessage(Builder builder) {
         this.phoneNumberSet = Collections.unmodifiableList(new ArrayList<>(builder.phoneNumberSet));
         this.templateParams = Collections.unmodifiableList(new ArrayList<>(builder.templateParams));
+        this.templateId = builder.templateId;
+        this.action = builder.action;
     }
 
     /**
@@ -110,33 +115,13 @@ public class TencentSmsRequest {
     public String[] getPhoneNumberArray() {
         return phoneNumberSet.toArray(new String[0]);
     }
-    
-    /**
-     * 获取手机号数量
-     * 
-     * @return 手机号数量
-     */
-    public int getPhoneCount() {
-        return phoneNumberSet.size();
+
+    public String getTemplateId() {
+        return templateId;
     }
-    
-    /**
-     * 获取模板参数数量
-     * 
-     * @return 模板参数数量
-     */
-    public int getTemplateParamCount() {
-        return templateParams.size();
-    }
-    
-    /**
-     * 检查是否包含指定手机号
-     * 
-     * @param phone 手机号
-     * @return 如果包含返回true，否则返回false
-     */
-    public boolean containsPhone(String phone) {
-        return phoneNumberSet.contains(phone);
+
+    public String getAction() {
+        return  action;
     }
 
     /**
@@ -189,6 +174,8 @@ public class TencentSmsRequest {
     public static class Builder {
         private final List<String> phoneNumberSet = new ArrayList<>();
         private final List<String> templateParams = new ArrayList<>();
+        private String templateId;
+        private String action;
 
         /**
          * 添加单个手机号
@@ -290,6 +277,20 @@ public class TencentSmsRequest {
             }
             return this;
         }
+
+        public Builder templateId(String templateId) {
+            if (templateId != null) {
+                this.templateId = templateId;
+            }
+            return this;
+        }
+
+        public Builder action(String action) {
+            if (action != null) {
+                this.action = action;
+            }
+            return this;
+        }
         
         /**
          * 设置模板参数列表（替换现有列表）
@@ -317,7 +318,7 @@ public class TencentSmsRequest {
         
         /**
          * 清空所有手机号
-         * 
+         *
          * @return Builder实例，支持链式调用
          */
         public Builder clearPhones() {
@@ -347,55 +348,19 @@ public class TencentSmsRequest {
         }
         
         /**
-         * 获取当前手机号数量
-         * 
-         * @return 手机号数量
-         */
-        public int getPhoneCount() {
-            return phoneNumberSet.size();
-        }
-        
-        /**
-         * 获取当前模板参数数量
-         * 
-         * @return 模板参数数量
-         */
-        public int getParamCount() {
-            return templateParams.size();
-        }
-        
-        /**
-         * 检查是否包含指定手机号
-         * 
-         * @param phone 手机号
-         * @return 如果包含返回true，否则返回false
-         */
-        public boolean containsPhone(String phone) {
-            return phoneNumberSet.contains(phone);
-        }
-        
-        /**
-         * 移除指定手机号
-         * 
-         * @param phone 要移除的手机号
-         * @return Builder实例，支持链式调用
-         */
-        public Builder removePhone(String phone) {
-            this.phoneNumberSet.remove(phone);
-            return this;
-        }
-        
-        /**
          * 构建TencentSmsRequest实例
          * 
          * @return TencentSmsRequest实例
          * @throws IllegalStateException 如果必填参数缺失
          */
-        public TencentSmsRequest build() {
+        public TencentSmsMessage build() {
             if (phoneNumberSet.isEmpty()) {
                 throw new IllegalStateException("手机号列表不能为空");
             }
-            return new TencentSmsRequest(this);
+            if (phoneNumberSet.size() > MAX_PHONE_COUNT) {
+                throw new IllegalStateException("手机号一次发送最多支持200个");
+            }
+            return new TencentSmsMessage(this);
         }
         
         /**

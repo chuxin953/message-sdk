@@ -8,7 +8,7 @@
         <artifactId>messaging-sdk</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-m
+
     <artifactId>message-sdk-sms</artifactId>
     <packaging>jar</packaging>
 

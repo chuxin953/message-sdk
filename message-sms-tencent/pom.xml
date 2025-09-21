@@ -18,12 +18,6 @@
             <groupId>com.xiangxi.message</groupId>
             <artifactId>message-sdk-sms</artifactId>
         </dependency>
-
-        <!-- Tencent 短信 SDK -->
-        <dependency>
-            <groupId>com.tencentcloudapi</groupId>
-            <artifactId>tencentcloud-sdk-java-sms</artifactId>
-        </dependency>
     </dependencies>
 
 </project>

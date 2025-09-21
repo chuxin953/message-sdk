@@ -42,7 +42,7 @@ public record HttpConnection (OkHttpClient client){
         MediaType contentType = MediaType.parse("application/x-www-form-urlencoded");
         Request request = null;
         try {
-            request = (new Request.Builder()).url(url).post(RequestBody.create(body,contentType)).build();
+            request = (new Request.Builder()).url(url).post(RequestBody.create(contentType, body)).build();
         } catch (IllegalArgumentException e) {
             throw new ClientException(e.getClass().getName() + "-" + e.getMessage());
         }
@@ -50,11 +50,11 @@ public record HttpConnection (OkHttpClient client){
     }
 
     public Response postRequest(String url, String body, Headers headers) throws ClientException, IOException {
-        return postRequestInternal(url, headers, RequestBody.create(body, MediaType.parse(Objects.requireNonNull(headers.get("Content-Type")))));
+        return postRequestInternal(url, headers, RequestBody.create(MediaType.parse(Objects.requireNonNull(headers.get("Content-Type"))), body));
     }
 
     public Response postRequest(String url, byte[] body, Headers headers) throws ClientException, IOException {
-        return postRequestInternal(url, headers, RequestBody.create(body, MediaType.parse(Objects.requireNonNull(headers.get("Content-Type")))));
+        return postRequestInternal(url, headers, RequestBody.create(MediaType.parse(Objects.requireNonNull(headers.get("Content-Type"))), body));
     }
 
     public Response postRequestInternal(String url, Headers headers, RequestBody requestBody) throws ClientException, IOException {
