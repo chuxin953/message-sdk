@@ -1,4 +1,4 @@
-package com.xiangxi.message.log;
+package com.xiangxi.message.events;
 
 /**
  * @author 初心

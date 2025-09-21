@@ -3,9 +3,9 @@ package com.xiangxi.message.manager;
 
 import com.xiangxi.message.api.MessageSender;
 import com.xiangxi.message.common.exception.MessageSendException;
-import com.xiangxi.message.log.MessageEventPublisher;
-import com.xiangxi.message.log.MessageSentEvent;
-import com.xiangxi.message.log.MessageSendFailedEvent;
+import com.xiangxi.message.events.MessageEventPublisher;
+import com.xiangxi.message.events.MessageSentEvent;
+import com.xiangxi.message.events.MessageSendFailedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;

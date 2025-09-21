@@ -91,7 +91,7 @@
 
             <dependency>
                 <groupId>com.xiangxi.message</groupId>
-                <artifactId>message-sdk-logging</artifactId>
+                <artifactId>message-sdk-events</artifactId>
                 <version>${revision}</version>
             </dependency>
 
