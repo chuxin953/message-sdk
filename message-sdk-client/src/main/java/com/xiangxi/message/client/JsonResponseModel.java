@@ -5,4 +5,8 @@ import com.alibaba.fastjson2.annotation.JSONField;
 public class JsonResponseModel<T> {
     @JSONField(name = "response")
     private T data;
+
+    public T getData() {
+        return data;
+    }
 }

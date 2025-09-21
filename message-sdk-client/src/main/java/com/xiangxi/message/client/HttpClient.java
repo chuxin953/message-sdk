@@ -59,7 +59,8 @@ public class HttpClient {
             throw new ClientException(msg, e);
         }
         Type type = new TypeReference<JsonResponseModel<T>>(typeOft){}.getType();
-        return  JSON.parseObject(body, type);
+        JsonResponseModel<T> jsonResponseModel = JSON.parseObject(body, type);
+        return  jsonResponseModel.getData();
     }
 
 
