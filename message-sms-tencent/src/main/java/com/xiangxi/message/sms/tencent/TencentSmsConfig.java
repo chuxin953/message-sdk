@@ -2,14 +2,12 @@ package com.xiangxi.message.sms.tencent;
 
 import com.xiangxi.message.common.validation.Required;
 import com.xiangxi.message.sms.config.SmsConfig;
-import lombok.Getter;
 
 /**
  * 腾讯短信配置
  * @author 初心
  * Create by on 2025/9/16 15:38 34
  */
-@Getter
 public class TencentSmsConfig extends SmsConfig {
     public TencentSmsConfig(String sign, String appId, String appKey, String sdkAppId, String region, String templateId) {
         super(sign);
@@ -34,4 +32,25 @@ public class TencentSmsConfig extends SmsConfig {
     
     @Required(message = "模板ID不能为空", fieldName = "模板ID")
     private final String templateId;
+
+
+    public String getAppId() {
+        return appId;
+    }
+
+    public String getAppKey() {
+        return appKey;
+    }
+
+    public String getSdkAppId() {
+        return sdkAppId;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public String getTemplateId() {
+        return templateId;
+    }
 }

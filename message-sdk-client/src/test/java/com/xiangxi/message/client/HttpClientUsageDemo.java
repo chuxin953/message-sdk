@@ -1,6 +1,6 @@
 package com.xiangxi.message.client;
 
-import java.time.Duration;
+import com.xiangxi.message.client.enums.HttpMethod;
 
 public class HttpClientUsageDemo {
     public static void main(String[] args) {

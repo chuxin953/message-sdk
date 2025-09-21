@@ -4,7 +4,8 @@
 [![Maven](https://img.shields.io/badge/Maven-3.9+-blue.svg)](https://maven.apache.org/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-一个基于 Java SPI 的企业级多渠道消息发送 SDK，提供统一的消息发送接口，支持短信、邮件、推送等多种消息类型的发送。
+一个基于 Java SPI 的多渠道消息发送 SDK，提供统一的消息发送接口，支持短信、邮件、推送等多种消息类型的发送。
+暂时只支持短信的发送等 不进行消息厂商的其他操作 比如修改短信的模板 签名等处理 暂时只支持发送短信等
 
 ## ✨ 核心特性
 

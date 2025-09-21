@@ -28,7 +28,7 @@ public class MessageEventPublisher {
         int threads = Math.max(2, Runtime.getRuntime().availableProcessors());
         this.executor = new ThreadPoolExecutor(
                 threads,
-                threads,
+                threads * 2,
                 60L, TimeUnit.SECONDS,
                 new LinkedBlockingQueue<>(1000),
                 new ThreadFactory() {

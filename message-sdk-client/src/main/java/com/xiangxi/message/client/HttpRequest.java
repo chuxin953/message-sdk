@@ -1,5 +1,7 @@
 package com.xiangxi.message.client;
 
+import com.xiangxi.message.client.enums.HttpMethod;
+
 import java.io.File;
 import java.time.Duration;
 import java.util.Collections;
