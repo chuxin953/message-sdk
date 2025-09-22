@@ -1,9 +1,9 @@
 package com.xiangxi.message.sms.tencent;
 
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONException;
 import com.alibaba.fastjson2.TypeReference;
 import com.alibaba.fastjson2.util.ParameterizedTypeImpl;
-import com.google.gson.JsonSyntaxException;
 import com.xiangxi.message.client.ClientException;
 import com.xiangxi.message.client.ResponseParse;
 
@@ -27,7 +27,7 @@ public class TencentResponseParse<T> implements ResponseParse<T> {
             Type type = new TypeReference<TencentResponseJsonModel<TencentSmsApiErrResponse>>(){
             }.getType();
             errResp = JSON.parseObject(body, type);
-        }catch (JsonSyntaxException e){
+        }catch (JSONException e){
             String msg = "json is not a valid representation for an object of type";
             throw new ClientException(msg, e);
         }
