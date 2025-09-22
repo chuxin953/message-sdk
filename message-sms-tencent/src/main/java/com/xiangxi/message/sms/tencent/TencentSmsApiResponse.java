@@ -6,28 +6,21 @@ import java.util.List;
 
 /**
  * @author 初心
- * Create by on 2025/9/21 17:35
+ * Create by on 2025/9/22 10:51 46
  */
 public class TencentSmsApiResponse {
-    @JSONField(name = "Response")
-    private Response response;
+    @JSONField(name = "SendStatusSet")
+    private List<SendStatus> sendStatusSet;
 
-    public Response getResponse() { return response; }
-    public void setResponse(Response response) { this.response = response; }
+    @JSONField(name = "RequestId")
+    private String requestId;
 
-    public static class Response {
-        @JSONField(name = "SendStatusSet")
-        private List<SendStatus> sendStatusSet;
+    public List<SendStatus> getSendStatusSet() { return sendStatusSet; }
+    public void setSendStatusSet(List<SendStatus> sendStatusSet) { this.sendStatusSet = sendStatusSet; }
 
-        @JSONField(name = "RequestId")
-        private String requestId;
+    public String getRequestId() { return requestId; }
+    public void setRequestId(String requestId) { this.requestId = requestId; }
 
-        public List<SendStatus> getSendStatusSet() { return sendStatusSet; }
-        public void setSendStatusSet(List<SendStatus> sendStatusSet) { this.sendStatusSet = sendStatusSet; }
-
-        public String getRequestId() { return requestId; }
-        public void setRequestId(String requestId) { this.requestId = requestId; }
-    }
 
     public static class SendStatus {
         @JSONField(name = "Code")
