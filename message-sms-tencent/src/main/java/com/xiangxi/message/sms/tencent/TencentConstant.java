@@ -7,4 +7,5 @@ package com.xiangxi.message.sms.tencent;
 public class TencentConstant {
     public static final String TENCENT_SMS_API_URL = "https://sms.tencentcloudapi.com/";
     public static final String VERSION = "2021-01-11";
+    public static final String HOST = "sms.tencentcloudapi.com";
 }

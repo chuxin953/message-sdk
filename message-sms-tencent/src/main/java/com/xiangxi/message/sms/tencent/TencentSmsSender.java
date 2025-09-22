@@ -14,8 +14,6 @@ import com.xiangxi.message.common.validation.ValidationException;
 import com.xiangxi.message.common.validation.Validator;
 import com.xiangxi.message.sms.ISmsSender;
 
-import java.util.Arrays;
-
 /**
  * @author 初心
  * Create by on 2025/9/16 15:45 17
@@ -53,28 +51,31 @@ public class TencentSmsSender implements ISmsSender<TencentSmsConfig, TencentSms
             TencentSmsApiRequest apiRequest = buildApiRequest(config, message);
             String payload = JSON.toJSONString(apiRequest);
             // 生成签名
-            String authorization = TencentSignUtils.generateAuthorization(
-                    config.getSecretId(),
+            String authorization = TencentSignUtils.generateAuthorization(config.getSecretId(),
                     config.getSecretKey(),
-                    config.getRegion(),
+                    TencentConstant.HOST,
                     TencentSmsConfig.SERVICE,
                     message.getAction(),
-                    payload
-            );
+                    payload);
+
+            String timestamp = String.valueOf(System.currentTimeMillis() / 1000);
+
 
             HttpRequest request = HttpRequest.builder()
                     .url(TencentConstant.TENCENT_SMS_API_URL)
                     .method(HttpMethod.POST)
                     .contentType(HttpContentType.JSON)
                     .body(payload)
+                    .header("Host", TencentConstant.HOST)
                     .header("Authorization", authorization)
                     .header("X-TC-Action", message.getAction())
+                    .header("X-TC-Timestamp", timestamp)
                     .header("X-TC-Version", TencentConstant.VERSION)
                     .header("X-TC-Region", config.getRegion())
                     .build();
-            TencentSmsApiResponse response = httpClient.doRequest(request, TencentSmsApiResponse.class);
-            // 处理响应
-            return processResponse(response);
+
+            TencentResponseParse<TencentSmsApiResponse> parser = new TencentResponseParse<>(TencentSmsApiResponse.class);
+            return httpClient.doRequest(request, parser);
         } catch (ValidationException e) {
             throw new MessageSendException("参数校验失败: " + e.getMessage(), e, "VALIDATION_ERROR", type(), channel());
         } catch (ClientException e) {
@@ -96,28 +97,5 @@ public class TencentSmsSender implements ISmsSender<TencentSmsConfig, TencentSms
                 .phoneNumberSet(message.getPhoneNumberArray())
                 .templateParamSet(message.getTemplateParamArray())
                 .build();
-    }
-
-    /**
-     * 处理API响应
-     */
-    private TencentSmsApiResponse processResponse(TencentSmsApiResponse response) {
-//        if (response.getResponse() == null ||
-//                response.getResponse().getSendStatusSet() == null ||
-//                response.getResponse().getSendStatusSet().isEmpty()) {
-//            return TencentSmsApiResponse.failure("响应数据异常");
-//        }
-//
-//        TencentSmsApiResponse.SendStatus status = response.getResponse().getSendStatusSet().get(0);
-//        String code = status.getCode();
-//        String message = status.getMessage();
-//        String serialNo = status.getSerialNo();
-//
-//        if ("Ok".equalsIgnoreCase(code)) {
-//            return SmsResponse.success(serialNo);
-//        } else {
-//            return SmsResponse.failure(message != null ? message : code);
-//        }
-        return  null;
     }
 }

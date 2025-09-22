@@ -1,17 +1,13 @@
 package com.xiangxi.message.client;
 
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.TypeReference;
 import com.xiangxi.message.client.adapter.OkHttpRequestAdapter;
 import okhttp3.*;
-
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,11 +24,11 @@ public class HttpClient {
         this.defaultHeaders = new HashMap<>(builder.defaultHeaders);
     }
 
-    public <T> T doRequest(HttpRequest req, Class<T> clazz) throws ClientException, IOException {
-        return internalRequest(req, clazz);
+    public <T> T doRequest(HttpRequest req, ResponseParse<T> parser) throws ClientException, IOException {
+        return internalRequest(req, parser);
     }
 
-    protected  <T> T internalRequest(HttpRequest req, Class<T> clazz) throws ClientException {
+    protected  <T> T internalRequest(HttpRequest req, ResponseParse<T> parser) throws ClientException {
         try {
             Request request = new  OkHttpRequestAdapter(defaultHeaders).adaptRequest(req);
             Response resp = connection.doRequest(request);
@@ -40,13 +36,13 @@ public class HttpClient {
                 String msg = "response code is " + resp.code() + ", not 200";
                 throw new ClientException(msg, "", "ServerSideError");
             }
-            return processResponseJson(resp, clazz);
+            return processResponseJson(resp, parser);
         }catch (IOException e) {
             throw new ClientException("", e);
         }
     }
 
-    protected <T> T processResponseJson(Response resp, Class<T> typeOft) throws ClientException {
+    protected <T> T processResponseJson(Response resp, ResponseParse<T> parser) throws ClientException {
         String body;
         try (ResponseBody responseBody = resp.body()) {
             if (responseBody == null) {
@@ -58,9 +54,7 @@ public class HttpClient {
                     "Content-Length and stream length disagree.";
             throw new ClientException(msg, e);
         }
-        Type type = new TypeReference<JsonResponseModel<T>>(typeOft){}.getType();
-        JsonResponseModel<T> jsonResponseModel = JSON.parseObject(body, type);
-        return  jsonResponseModel.getData();
+        return parser.parse(body);
     }
 
 
