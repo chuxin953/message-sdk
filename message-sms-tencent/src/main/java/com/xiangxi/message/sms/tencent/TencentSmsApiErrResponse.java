@@ -1,16 +1,20 @@
 package com.xiangxi.message.sms.tencent;
 
-import com.alibaba.fastjson2.annotation.JSONField;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author 初心
  * Create by on 2025/9/22 10:52 03
  */
 public class TencentSmsApiErrResponse {
-    @JSONField(name = "RequestId")
+    @SerializedName("RequestId")
+    @Expose
     private String requestId;
 
-    @JSONField(name = "Error")
+    @SerializedName("Error")
+    @Expose
     private ErrorInfo error;
 
     public String getRequestId() {
@@ -30,10 +34,10 @@ public class TencentSmsApiErrResponse {
     }
 
     public static class ErrorInfo {
-        @JSONField(name = "Code")
+        @SerializedName("Code")
         private String code;
 
-        @JSONField(name = "Message")
+        @SerializedName("Message")
         private String message;
 
         public String getCode() { return code; }

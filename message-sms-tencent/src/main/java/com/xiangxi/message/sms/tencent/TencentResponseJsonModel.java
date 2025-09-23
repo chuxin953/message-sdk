@@ -1,6 +1,8 @@
 package com.xiangxi.message.sms.tencent;
 
-import com.alibaba.fastjson.annotation.JSONField;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 /**
  * @author 初心
@@ -8,7 +10,8 @@ import com.alibaba.fastjson.annotation.JSONField;
  */
 
 public class TencentResponseJsonModel<T> {
-    @JSONField(name = "Response")
+    @SerializedName("Response")
+    @Expose
     private T response;
 
     public T getResponse() {

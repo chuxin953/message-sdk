@@ -1,6 +1,7 @@
 package com.xiangxi.message.sms.tencent;
 
-import com.alibaba.fastjson2.annotation.JSONField;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
@@ -9,10 +10,12 @@ import java.util.List;
  * Create by on 2025/9/22 10:51 46
  */
 public class TencentSmsApiResponse {
-    @JSONField(name = "SendStatusSet")
+    @SerializedName("SendStatusSet")
+    @Expose
     private List<SendStatus> sendStatusSet;
 
-    @JSONField(name = "RequestId")
+    @SerializedName("RequestId")
+    @Expose
     private String requestId;
 
     public List<SendStatus> getSendStatusSet() { return sendStatusSet; }
@@ -23,16 +26,20 @@ public class TencentSmsApiResponse {
 
 
     public static class SendStatus {
-        @JSONField(name = "Code")
+        @SerializedName("Code")
+        @Expose
         private String code;
 
-        @JSONField(name = "Message")
+        @SerializedName("Message")
+        @Expose
         private String message;
 
-        @JSONField(name = "SerialNo")
+        @SerializedName("SerialNo")
+        @Expose
         private String serialNo;
 
-        @JSONField(name = "PhoneNumber")
+        @SerializedName("PhoneNumber")
+        @Expose
         private String phoneNumber;
 
         public String getCode() { return code; }

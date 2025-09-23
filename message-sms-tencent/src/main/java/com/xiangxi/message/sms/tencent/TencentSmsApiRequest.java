@@ -1,6 +1,6 @@
 package com.xiangxi.message.sms.tencent;
 
-import com.alibaba.fastjson2.annotation.JSONField;
+import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
@@ -25,35 +25,35 @@ import java.util.List;
  */
 public class TencentSmsApiRequest {
     /** 短信 SdkAppId（在控制台获取） */
-    @JSONField(name = "SmsSdkAppId")
+    @SerializedName("SmsSdkAppId")
     private String smsSdkAppId;
 
     /** 短信模板 ID */
-    @JSONField(name = "TemplateId")
+    @SerializedName("TemplateId")
     private String templateId;
 
     /** 接收方号码列表，需符合 E.164 标准格式，例如 +8613711112222 */
-    @JSONField(name = "PhoneNumberSet")
+    @SerializedName("PhoneNumberSet")
     private String[] phoneNumberSet;
 
     /** 短信签名 */
-    @JSONField(name = "SignName")
+    @SerializedName("SignName")
     private String signName;
 
     /** 模板参数列表，顺序对应模板占位符 */
-    @JSONField(name = "TemplateParamSet")
+    @SerializedName("TemplateParamSet")
     private String[] templateParamSet;
 
     /** 扩展码，可选 */
-    @JSONField(name = "ExtendCode")
+    @SerializedName("ExtendCode")
     private String extendCode;
 
     /** 用户自定义上下文，回执会原样返回，可选 */
-    @JSONField(name = "SessionContext")
+    @SerializedName("SessionContext")
     private String sessionContext;
 
     /** 国际/港澳台短信 SenderId，可选 */
-    @JSONField(name = "SenderId")
+    @SerializedName("SenderId")
     private String senderId;
 
     /** 无参构造器（用于 JSON 反序列化） */

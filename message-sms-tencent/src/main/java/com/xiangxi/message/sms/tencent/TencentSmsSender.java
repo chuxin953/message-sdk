@@ -1,7 +1,7 @@
 package com.xiangxi.message.sms.tencent;
 
 
-import com.alibaba.fastjson2.JSON;
+import com.google.gson.Gson;
 import com.xiangxi.message.client.ClientException;
 import com.xiangxi.message.client.HttpClient;
 import com.xiangxi.message.client.HttpRequest;
@@ -21,6 +21,7 @@ import com.xiangxi.message.sms.ISmsSender;
 public class TencentSmsSender implements ISmsSender<TencentSmsConfig, TencentSmsMessage, TencentSmsApiResponse> {
 
     private final HttpClient httpClient;
+    private static final Gson GSON = new Gson();
 
     public TencentSmsSender() {
         this.httpClient = new HttpClient.Builder()
@@ -49,11 +50,12 @@ public class TencentSmsSender implements ISmsSender<TencentSmsConfig, TencentSms
             Validator.validate(message);
             // 构建 API 请求体与签名后的 HttpRequest
             TencentSmsApiRequest apiRequest = buildApiRequest(config, message);
-            String payload = JSON.toJSONString(apiRequest);
+            String payload = GSON.toJson(apiRequest);
             HttpRequest request = buildSignedHttpRequest(config, message, payload);
 
             // 发送请求并解析响应
             TencentResponseParse<TencentSmsApiResponse> parser = new TencentResponseParse<>(TencentSmsApiResponse.class);
+
             return httpClient.doRequest(request, parser);
         } catch (ValidationException e) {
             throw new MessageSendException("参数校验失败: " + e.getMessage(), e, "VALIDATION_ERROR", type(), channel());

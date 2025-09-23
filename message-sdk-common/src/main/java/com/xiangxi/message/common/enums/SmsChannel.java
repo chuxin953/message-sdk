@@ -30,7 +30,9 @@ public enum SmsChannel {
      * 腾讯云短信服务
      * <p>腾讯云SMS服务，支持国内外短信发送</p>
      */
-    TENCENT_SMS("TENCENT_SMS", "腾讯云", "腾讯云SMS服务，支持国内外短信发送", true);
+    TENCENT_SMS("TENCENT_SMS", "腾讯云", "腾讯云SMS服务，支持国内外短信发送", true),
+
+    ALI_SMS("ALI_SMS", "阿里云", "阿里云SMS服务，支持国内外短信发送", true);
     /**
      * 渠道名称（用于路由识别）
      */
