@@ -7,6 +7,11 @@ import java.io.File;
 import java.time.Duration;
 import java.util.*;
 
+/**
+ * 统一的 HTTP 请求模型。
+ *
+ * 用于上层构建与网关交互的请求数据，配合适配器转换为底层客户端请求。
+ */
 public class HttpRequest {
     // 请求地址（可以是绝对URL或相对路径）
     private final String url;

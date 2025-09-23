@@ -59,11 +59,16 @@ public class MessageSenderManager {
 
     private static boolean initialized = false;
 
+    /**
+     * 惰性初始化：通过 SPI 加载所有 {@link MessageSender} 实现并缓存。
+     * 多线程安全：使用 synchronized 确保只初始化一次。
+     */
     private static synchronized void init(){
         if (initialized) return;
 
         ServiceLoader<MessageSender> loader = ServiceLoader.load(MessageSender.class);
         loader.forEach(sender -> {
+            // routeKey 约定：type:channel，例如 sms:tencent
             String key = sender.routeKey();
             if (senderMap.containsKey(key)) {
                 throw new IllegalStateException("Duplicate MessageSender for type: " + key);
