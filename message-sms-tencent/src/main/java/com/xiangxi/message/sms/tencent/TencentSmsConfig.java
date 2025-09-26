@@ -3,28 +3,37 @@ package com.xiangxi.message.sms.tencent;
 import com.xiangxi.message.common.validation.Required;
 
 /**
- * 腾讯短信配置
- * @author 初心
- * Create by on 2025/9/16 15:38 34
+ * 腾讯短信配置。
+ *
+ * 必填项：secretId/secretKey/sdkAppId/region/signName
+ * 说明：用于腾讯短信签名鉴权、请求路由与短信签名展示。
  */
 public class TencentSmsConfig{
 
+    /**
+     * 腾讯云服务名，用于计算鉴权签名。
+     */
     public static final String SERVICE = "sms";
 
 
+    /** 访问密钥 ID（必填） */
     @Required(message = "secretId不能为空", fieldName = "secretId")
     private final String secretId;
     
+    /** 访问密钥 Key（必填） */
     @Required(message = "secretKey不能为空", fieldName = "secretKey")
     private final String secretKey;
     
+    /** 短信 SDK AppId（必填） */
     @Required(message = "SDK AppId不能为空", fieldName = "SDKAppId")
     private final String sdkAppId;
     
+    /** 区域地域，如 ap-beijing（必填） */
     @Required(message = "地域不能为空", fieldName = "地域")
     private final String region;
 
 
+    /** 短信签名（必填），与控制台中的签名保持一致 */
     @Required(message = "signName不能为空", fieldName = "签名信息")
     private final String signName;
 

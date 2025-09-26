@@ -26,6 +26,7 @@
         <module>message-sdk-push</module>
         <module>message-sdk-samples</module>
         <module>message-sms-tencent</module>
+        <module>message-sms-aliyun</module>
         <module>message-sdk-manager</module>
         <module>message-sdk-events</module>
         <module>message-sdk-client</module>

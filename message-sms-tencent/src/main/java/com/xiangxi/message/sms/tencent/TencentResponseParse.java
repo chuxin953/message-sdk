@@ -1,9 +1,8 @@
 package com.xiangxi.message.sms.tencent;
 
-import com.alibaba.fastjson2.JSON;
-import com.alibaba.fastjson2.JSONException;
-import com.alibaba.fastjson2.TypeReference;
-import com.alibaba.fastjson2.util.ParameterizedTypeImpl;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.xiangxi.message.client.ClientException;
 import com.xiangxi.message.client.ResponseParse;
 
@@ -14,6 +13,7 @@ import java.lang.reflect.Type;
  * Create by on 2025/9/22 10:48 00
  */
 public class TencentResponseParse<T> implements ResponseParse<T> {
+    private static final Gson gson = new Gson();
     private final Class<T> clazz;
 
     public TencentResponseParse(Class<T> clazz) {
@@ -24,22 +24,15 @@ public class TencentResponseParse<T> implements ResponseParse<T> {
     public T parse(String body) throws ClientException {
         TencentResponseJsonModel<TencentSmsApiErrResponse> errResp;
         try {
-            Type type = new TypeReference<TencentResponseJsonModel<TencentSmsApiErrResponse>>(){
-            }.getType();
-            errResp = JSON.parseObject(body, type);
-        }catch (JSONException e){
+            Type type = new TypeToken<TencentResponseJsonModel<TencentSmsApiErrResponse>>() {}.getType();
+            errResp = gson.fromJson(body, type);
+        }catch (JsonSyntaxException e){
             String msg = "json is not a valid representation for an object of type";
             throw new ClientException(msg, e);
         }
         if (errResp.getResponse().getError() == null) {
-            // 成功情况，解析为泛型 T
-            TencentResponseJsonModel<T> respModel = JSON.parseObject(
-                    body,
-                    new ParameterizedTypeImpl(
-                            new Type[]{clazz},              // 泛型参数 T
-                            null,                           // ownerType (外部类) = null
-                            TencentResponseJsonModel.class
-            ));
+            Type successType = TypeToken.getParameterized(TencentResponseJsonModel.class, clazz).getType();
+            TencentResponseJsonModel<T> respModel = gson.fromJson(body, successType);
             return respModel.getResponse();
         }else {
             throw new ClientException(

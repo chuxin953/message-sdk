@@ -13,6 +13,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
+/**
+ * 轻量 HTTP 客户端封装。
+ *
+ * 设计目标：
+ * - 简单：仅封装最常用的超时、默认头、重试与解析路径；
+ * - 可插拔：请求适配由 OkHttpRequestAdapter 完成，便于替换；
+ * - 明确的错误语义：统一抛出 ClientException，并携带服务端状态与原因。
+ */
 public class HttpClient {
     private final HttpConnection connection;
     private final Map<String, String> defaultHeaders;
@@ -24,10 +32,20 @@ public class HttpClient {
         this.defaultHeaders = new HashMap<>(builder.defaultHeaders);
     }
 
+    /**
+     * 发送请求并解析响应。
+     *
+     * @param req     高层请求模型
+     * @param parser  响应解析器（字符串 -> 目标对象）
+     * @throws ClientException 网络/服务端/解析异常时抛出
+     */
     public <T> T doRequest(HttpRequest req, ResponseParse<T> parser) throws ClientException, IOException {
         return internalRequest(req, parser);
     }
 
+    /**
+     * 内部请求逻辑：适配 -> 执行 -> 状态检查 -> 解析。
+     */
     protected  <T> T internalRequest(HttpRequest req, ResponseParse<T> parser) throws ClientException {
         try {
             Request request = new  OkHttpRequestAdapter(defaultHeaders).adaptRequest(req);
@@ -42,6 +60,9 @@ public class HttpClient {
         }
     }
 
+    /**
+     * 读取响应体为字符串并交给解析器。统一处理空体与 IO 异常。
+     */
     protected <T> T processResponseJson(Response resp, ResponseParse<T> parser) throws ClientException {
         String body;
         try (ResponseBody responseBody = resp.body()) {

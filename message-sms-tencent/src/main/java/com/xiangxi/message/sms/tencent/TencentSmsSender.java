@@ -1,7 +1,7 @@
 package com.xiangxi.message.sms.tencent;
 
 
-import com.alibaba.fastjson2.JSON;
+import com.google.gson.Gson;
 import com.xiangxi.message.client.ClientException;
 import com.xiangxi.message.client.HttpClient;
 import com.xiangxi.message.client.HttpRequest;
@@ -21,6 +21,7 @@ import com.xiangxi.message.sms.ISmsSender;
 public class TencentSmsSender implements ISmsSender<TencentSmsConfig, TencentSmsMessage, TencentSmsApiResponse> {
 
     private final HttpClient httpClient;
+    private static final Gson GSON = new Gson();
 
     public TencentSmsSender() {
         this.httpClient = new HttpClient.Builder()
@@ -47,34 +48,14 @@ public class TencentSmsSender implements ISmsSender<TencentSmsConfig, TencentSms
             Validator.validate(config);
             // 校验消息参数
             Validator.validate(message);
-            // 构建API请求
+            // 构建 API 请求体与签名后的 HttpRequest
             TencentSmsApiRequest apiRequest = buildApiRequest(config, message);
-            String payload = JSON.toJSONString(apiRequest);
-            // 生成签名
-            String authorization = TencentSignUtils.generateAuthorization(config.getSecretId(),
-                    config.getSecretKey(),
-                    TencentConstant.HOST,
-                    TencentSmsConfig.SERVICE,
-                    message.getAction(),
-                    payload);
+            String payload = GSON.toJson(apiRequest);
+            HttpRequest request = buildSignedHttpRequest(config, message, payload);
 
-            String timestamp = String.valueOf(System.currentTimeMillis() / 1000);
-
-
-            HttpRequest request = HttpRequest.builder()
-                    .url(TencentConstant.TENCENT_SMS_API_URL)
-                    .method(HttpMethod.POST)
-                    .contentType(HttpContentType.JSON)
-                    .body(payload)
-                    .header("Host", TencentConstant.HOST)
-                    .header("Authorization", authorization)
-                    .header("X-TC-Action", message.getAction())
-                    .header("X-TC-Timestamp", timestamp)
-                    .header("X-TC-Version", TencentConstant.VERSION)
-                    .header("X-TC-Region", config.getRegion())
-                    .build();
-
+            // 发送请求并解析响应
             TencentResponseParse<TencentSmsApiResponse> parser = new TencentResponseParse<>(TencentSmsApiResponse.class);
+
             return httpClient.doRequest(request, parser);
         } catch (ValidationException e) {
             throw new MessageSendException("参数校验失败: " + e.getMessage(), e, "VALIDATION_ERROR", type(), channel());
@@ -96,6 +77,35 @@ public class TencentSmsSender implements ISmsSender<TencentSmsConfig, TencentSms
                 .templateId(message.getTemplateId())
                 .phoneNumberSet(message.getPhoneNumberArray())
                 .templateParamSet(message.getTemplateParamArray())
+                .build();
+    }
+
+    /**
+     * 构建带签名的 HttpRequest。
+     */
+    private HttpRequest buildSignedHttpRequest(TencentSmsConfig config, TencentSmsMessage message, String payload) throws Exception {
+        String authorization = TencentSignUtils.generateAuthorization(
+                config.getSecretId(),
+                config.getSecretKey(),
+                TencentConstant.HOST,
+                TencentSmsConfig.SERVICE,
+                message.getAction(),
+                payload
+        );
+
+        String timestamp = String.valueOf(System.currentTimeMillis() / 1000);
+
+        return HttpRequest.builder()
+                .url(TencentConstant.TENCENT_SMS_API_URL)
+                .method(HttpMethod.POST)
+                .contentType(HttpContentType.JSON)
+                .body(payload)
+                .header("Host", TencentConstant.HOST)
+                .header("Authorization", authorization)
+                .header("X-TC-Action", message.getAction())
+                .header("X-TC-Timestamp", timestamp)
+                .header("X-TC-Version", TencentConstant.VERSION)
+                .header("X-TC-Region", config.getRegion())
                 .build();
     }
 }

@@ -3,10 +3,24 @@ package com.xiangxi.message.common.exception;
 import java.io.Serial;
 
 /**
- * 消息发送异常
- * 
+ * 消息发送异常。
+ *
  * <p>当消息发送过程中出现错误时抛出此异常。这是一个受检异常，
  * 调用方必须显式处理或声明抛出。</p>
+ *
+ * <p>错误上下文约定：</p>
+ * <ul>
+ *   <li>errorCode：统一错误码，建议使用“供应商域前缀 + 语义”，如 TENCENT_SDK_ERROR / VALIDATION_ERROR / UNEXPECTED_ERROR；</li>
+ *   <li>messageType：消息类型（如 SMS/EMAIL/PUSH），便于聚合统计；</li>
+ *   <li>channel：渠道编码（如 TENCENT_SMS/ALI_SMS），便于快速定位实现与配置；</li>
+ * </ul>
+ *
+ * <p>构造器使用建议：</p>
+ * <ol>
+ *   <li>优先使用包含 errorCode、messageType、channel 的重载，便于统一日志与告警聚合；</li>
+ *   <li>仅当无法提供上下文时，使用基础构造器；</li>
+ *   <li>toString() 与 getFullErrorMessage() 会拼装上下文，便于排查。</li>
+ * </ol>
  * 
  * <p>异常场景包括但不限于：</p>
  * <ul>

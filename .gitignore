@@ -13,5 +13,6 @@ buildNumber.properties
 *.iml
 *.ipr
 **.flattened-pom.xml
+.mvn
 
 

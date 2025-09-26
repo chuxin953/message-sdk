@@ -3,36 +3,18 @@ package com.xiangxi.message.sms;
 import com.xiangxi.message.api.MessageSender;
 
 /**
- * 短信发送器接口
- * <p>
- * 这是所有短信发送实现的统一接口，继承自{@link MessageSender}核心接口。
- * </p>
- * 
- * <p>
- * 实现此接口的类需要：
- * </p>
- * <ul>
- *   <li>实现{@link #type()}方法，返回"SMS"</li>
- *   <li>实现{@link #channel()}方法，返回具体的短信渠道标识</li>
- *   <li>实现{@link #send(Object, Object)}方法，处理短信发送逻辑</li>
- *   <li>通过SPI机制注册到系统中</li>
- * </ul>
- * 
- * <p>
- * 典型的实现包括：
- * </p>
- * <ul>
- *   <li>腾讯云短信：TencentSmsSender</li>
- *   <li>阿里云短信：AliyunSmsSender</li>
- *   <li>华为云短信：HuaweiSmsSender</li>
- * </ul>
- * 
- * @param <C> 短信配置类型，包含API密钥、签名、模板ID等信息
- * @param <M> 短信请求类型，包含接收者手机号、模板参数等信息
- * 
- * @author 初心
- * @since 1.0.0
- * @see MessageSender
+ * 短信发送器接口。
+ *
+ * 语义：所有短信渠道实现均应实现此接口，统一被上层通过 {@link #type()} 与 {@link #channel()} 路由。
+ *
+ * 约定：
+ * - {@link #type()} 必须返回统一的短信类型标识（例如："SMS"）。
+ * - {@link #channel()} 返回渠道编码（例如："TENCENT_SMS"、"ALI_SMS"）。
+ * - {@link #send(Object, Object)} 抛出的异常应转换为统一的业务异常，由上层捕获并记录。
+ *
+ * @param <C> 配置类型（含密钥/地域/签名等渠道初始化所需信息）
+ * @param <M> 消息类型（含目标号码/模板参数等发送所需信息）
+ * @param <R> 渠道响应类型（应被调用方转换为统一响应模型）
  */
 public interface ISmsSender<C, M, R> extends MessageSender<C, M, R> {
     // 继承父接口的所有方法，无需额外定义
