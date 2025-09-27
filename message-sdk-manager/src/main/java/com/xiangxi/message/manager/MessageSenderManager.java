@@ -4,8 +4,7 @@ package com.xiangxi.message.manager;
 import com.xiangxi.message.api.MessageSender;
 import com.xiangxi.message.common.exception.MessageSendException;
 import com.xiangxi.message.events.MessageEventPublisher;
-import com.xiangxi.message.events.MessageSentEvent;
-import com.xiangxi.message.events.MessageSendFailedEvent;
+import com.xiangxi.message.events.MessageEventFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -16,6 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.UUID;
 
 /**
  * 统一入口
@@ -136,20 +136,39 @@ public class MessageSenderManager {
         Objects.requireNonNull(message, "message must not be null");
         long start = System.nanoTime();
         String traceId = MDC.get("traceId");
-        long timestamp = System.currentTimeMillis();
+        if (traceId == null || traceId.isBlank()) {
+            traceId = UUID.randomUUID().toString();
+        }
+        String typeVal = sender.type();
+        String channelVal = sender.channel();
+        // 发布开始事件
+        safePublish(MessageEventFactory.createStartedEvent(typeVal, channelVal, traceId, Collections.emptyMap()));
         try {
             R result = sender.send(config, message);
-            long costMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
-            event.publish(new MessageSentEvent(sender, sender.type(), sender.channel(), message, result, timestamp, traceId, costMs));
+            long costMs = elapsedMs(start);
+            safePublish(MessageEventFactory.createSentEvent(sender, typeVal, channelVal, message, result, traceId, costMs));
             return result;
         } catch (MessageSendException e) {
-            long costMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
-            event.publish(new MessageSendFailedEvent(sender, sender.type(), sender.channel(), message, e, timestamp, traceId, costMs));
+            long costMs = elapsedMs(start);
+            safePublish(MessageEventFactory.createFailedEvent(sender, typeVal, channelVal, message, e, traceId, costMs));
             throw e;
         } catch (RuntimeException e) { // 兜底：确保运行时异常也能观测到
-            long costMs = TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
-            event.publish(new MessageSendFailedEvent(sender, sender.type(), sender.channel(), message, e, timestamp, traceId, costMs));
+            long costMs = elapsedMs(start);
+            safePublish(MessageEventFactory.createFailedEvent(sender, typeVal, channelVal, message, e, traceId, costMs));
             throw e;
         }
     }
+    private static long elapsedMs(long startNano) {
+        return TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNano);
+    }
+
+    private static void safePublish(Object evt) {
+        try {
+            event.publish(evt);
+        } catch (Exception pubEx) {
+            log.warn("Publish event failed: {}", pubEx.getMessage(), pubEx);
+        }
+    }
+
 }
+
