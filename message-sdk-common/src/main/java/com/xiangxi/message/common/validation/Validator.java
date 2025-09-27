@@ -1,5 +1,7 @@
 package com.xiangxi.message.common.validation;
 
+import com.xiangxi.message.common.annotation.Required;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;

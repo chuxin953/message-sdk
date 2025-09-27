@@ -1,7 +1,5 @@
 package com.xiangxi.message.sms.tencent;
 
-import com.xiangxi.message.common.validation.Required;
-
 /**
  * 腾讯短信配置。
  *
@@ -17,24 +15,19 @@ public class TencentSmsConfig{
 
 
     /** 访问密钥 ID（必填） */
-    @Required(message = "secretId不能为空", fieldName = "secretId")
     private final String secretId;
     
     /** 访问密钥 Key（必填） */
-    @Required(message = "secretKey不能为空", fieldName = "secretKey")
     private final String secretKey;
     
     /** 短信 SDK AppId（必填） */
-    @Required(message = "SDK AppId不能为空", fieldName = "SDKAppId")
     private final String sdkAppId;
     
     /** 区域地域，如 ap-beijing（必填） */
-    @Required(message = "地域不能为空", fieldName = "地域")
     private final String region;
 
 
     /** 短信签名（必填），与控制台中的签名保持一致 */
-    @Required(message = "signName不能为空", fieldName = "签名信息")
     private final String signName;
 
     private TencentSmsConfig(Builder builder) {

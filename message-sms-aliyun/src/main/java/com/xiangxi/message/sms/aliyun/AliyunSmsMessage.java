@@ -1,12 +1,8 @@
 package com.xiangxi.message.sms.aliyun;
 
-import com.xiangxi.message.common.validation.Required;
-
 /** 阿里云短信消息 */
 public class AliyunSmsMessage {
-    @Required(fieldName = "TemplateCode")
     private final String templateCode;
-    @Required(fieldName = "PhoneNumbers")
     private final String[] phoneNumbers;
     private final String templateParamJson; // {"code":"123456"}
 

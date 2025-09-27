@@ -1,20 +1,22 @@
 package com.xiangxi.message.client.adapter;
 
+import com.xiangxi.message.client.enums.HttpContentType;
 import com.xiangxi.message.client.enums.HttpMethod;
 import com.xiangxi.message.client.HttpRequest;
 import okhttp3.*;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class OkHttpRequestAdapter implements HttpRequestAdapter {
+public record OkHttpRequestAdapter(Map<String, String> defaultHeaders) implements HttpRequestAdapter {
 
-    private final Map<String, String> defaultHeaders;
     public OkHttpRequestAdapter(Map<String, String> defaultHeaders) {
         this.defaultHeaders = defaultHeaders != null ? defaultHeaders : Collections.emptyMap();
     }
+
     @Override
     public Request adaptRequest(HttpRequest req) {
         HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(req.getUrl())).newBuilder();
@@ -74,7 +76,7 @@ public class OkHttpRequestAdapter implements HttpRequestAdapter {
         if (contentType != null && !contentType.isEmpty()) {
             mt = MediaType.parse(contentType);
         }
-        return RequestBody.create(mt, bodyStr);
+        return RequestBody.create(bodyStr, mt);
     }
 
     private RequestBody buildFormBody(Map<String, String> form) {
@@ -89,7 +91,7 @@ public class OkHttpRequestAdapter implements HttpRequestAdapter {
         return fb.build();
     }
 
-    private RequestBody buildMultipartBody(Map<String, String> form, Map<String, java.io.File> files) {
+    private RequestBody buildMultipartBody(Map<String, String> form, Map<String, File> files) {
         MultipartBody.Builder mb = new MultipartBody.Builder().setType(MultipartBody.FORM);
         if (form != null) {
             for (Map.Entry<String, String> e : form.entrySet()) {
@@ -99,12 +101,12 @@ public class OkHttpRequestAdapter implements HttpRequestAdapter {
             }
         }
         if (files != null) {
-            for (Map.Entry<String, java.io.File> f : files.entrySet()) {
+            for (Map.Entry<String, File> f : files.entrySet()) {
                 if (f.getKey() != null && f.getValue() != null) {
                     mb.addFormDataPart(
                             f.getKey(),
                             f.getValue().getName(),
-                            RequestBody.create(MediaType.parse("application/octet-stream"), f.getValue())
+                            RequestBody.create(f.getValue(), MediaType.parse(HttpContentType.OCTET_STREAM.value()))
                     );
                 }
             }

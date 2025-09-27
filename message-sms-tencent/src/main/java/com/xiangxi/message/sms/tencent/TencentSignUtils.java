@@ -124,14 +124,10 @@ public class TencentSignUtils {
         if (value == null) {
             return "";
         }
-        try {
-            return URLEncoder.encode(value, StandardCharsets.UTF_8.name())
-                    .replace("+", "%20")
-                    .replace("*", "%2A")
-                    .replace("%7E", "~");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("UTF-8 encoding not supported", e);
-        }
+        return URLEncoder.encode(value, StandardCharsets.UTF_8)
+                .replace("+", "%20")
+                .replace("*", "%2A")
+                .replace("%7E", "~");
     }
 
     /**

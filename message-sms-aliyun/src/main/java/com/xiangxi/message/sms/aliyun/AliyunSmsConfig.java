@@ -1,16 +1,10 @@
 package com.xiangxi.message.sms.aliyun;
 
-import com.xiangxi.message.common.validation.Required;
-
 /** 阿里云短信配置 */
 public class AliyunSmsConfig {
-    @Required(fieldName = "AccessKeyId")
     private final String accessKeyId;
-    @Required(fieldName = "AccessKeySecret")
     private final String accessKeySecret;
-    @Required(fieldName = "SignName")
     private final String signName;
-    @Required(fieldName = "RegionId")
     private final String regionId;
 
     private AliyunSmsConfig(Builder b) {

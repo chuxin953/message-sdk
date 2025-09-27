@@ -1,8 +1,5 @@
 package com.xiangxi.message.sms.tencent;
 
-import com.xiangxi.message.common.validation.Required;
-
-import javax.swing.plaf.PanelUI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -71,9 +68,7 @@ public class TencentSmsMessage {
      * 接收短信的手机号列表
      * <p>必须包含国际区号，如+8613800138000</p>
      */
-    @Required(message = "手机号列表不能为空", fieldName = "手机号列表")
     private final List<String> phoneNumberSet;
-    @Required(message = "模板id不能为空", fieldName = "模板id")
     private final String templateId;
 
     private final String action;

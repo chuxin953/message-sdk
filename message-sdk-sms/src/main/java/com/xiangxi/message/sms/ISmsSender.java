@@ -1,6 +1,8 @@
 package com.xiangxi.message.sms;
 
 import com.xiangxi.message.api.MessageSender;
+import com.xiangxi.message.sms.model.SmsRequest;
+import com.xiangxi.message.sms.model.SmsResponse;
 
 /**
  * 短信发送器接口。
@@ -13,9 +15,7 @@ import com.xiangxi.message.api.MessageSender;
  * - {@link #send(Object, Object)} 抛出的异常应转换为统一的业务异常，由上层捕获并记录。
  *
  * @param <C> 配置类型（含密钥/地域/签名等渠道初始化所需信息）
- * @param <M> 消息类型（含目标号码/模板参数等发送所需信息）
- * @param <R> 渠道响应类型（应被调用方转换为统一响应模型）
  */
-public interface ISmsSender<C, M, R> extends MessageSender<C, M, R> {
+public interface ISmsSender<C> extends MessageSender<C, SmsRequest, SmsResponse> {
     // 继承父接口的所有方法，无需额外定义
 }
