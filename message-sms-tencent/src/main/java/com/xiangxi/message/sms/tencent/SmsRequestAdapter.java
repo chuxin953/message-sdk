@@ -1,5 +1,7 @@
 package com.xiangxi.message.sms.tencent;
 
+import com.xiangxi.message.common.validation.ValidationException;
+import com.xiangxi.message.common.validation.Validator;
 import com.xiangxi.message.sms.model.SmsRequest;
 
 import java.util.List;
@@ -14,6 +16,11 @@ import java.util.Map;
  * @since 1.0.0
  */
 public class SmsRequestAdapter {
+
+    /**
+     * 单次发送最大手机号数量限制
+     */
+    private static final int MAX_PHONE_COUNT = 200;
     
     /**
      * 将 SmsRequest 转换为 TencentSmsMessage
@@ -25,12 +32,15 @@ public class SmsRequestAdapter {
         if (smsRequest == null) {
             throw new IllegalArgumentException("SmsRequest cannot be null");
         }
-        
         // 验证请求
         smsRequest.validate();
         
         // 转换手机号格式（添加国际区号）
         List<String> phoneNumbers = smsRequest.phoneNumbers();
+        if (phoneNumbers.size() > MAX_PHONE_COUNT){
+            throw new ValidationException("手机号一次发送最多支持200个");
+        }
+
         List<String> tencentPhones = phoneNumbers.stream()
                 .map(SmsRequestAdapter::formatPhoneNumber)
                 .toList();

@@ -103,7 +103,7 @@ public record SmsRequest(@Required(message = "手机号列表不能为空") List
      * @return 第一个手机号
      */
     public String getPhoneNumber() {
-        return phoneNumbers != null && !phoneNumbers.isEmpty() ? phoneNumbers.get(0) : null;
+        return phoneNumbers != null && !phoneNumbers.isEmpty() ? phoneNumbers.getFirst() : null;
     }
 
     /**
