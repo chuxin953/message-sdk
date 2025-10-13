@@ -1,0 +1,111 @@
+{
+  "groups": [
+    {
+      "name": "message.sdk",
+      "type": "com.xiangxi.message.autoconfigure.MessageSdkProperties",
+      "sourceType": "com.xiangxi.message.autoconfigure.MessageSdkProperties"
+    },
+    {
+      "name": "message.sms",
+      "type": "com.xiangxi.message.autoconfigure.SmsVendorProperties",
+      "sourceType": "com.xiangxi.message.autoconfigure.SmsVendorProperties"
+    }
+  ],
+  "properties": [
+    {
+      "name": "message.sdk.enabled",
+      "type": "java.lang.Boolean",
+      "description": "是否启用 Message SDK",
+      "defaultValue": true
+    },
+    {
+      "name": "message.sdk.default-type",
+      "type": "java.lang.String",
+      "description": "默认消息类型",
+      "defaultValue": "sms"
+    },
+    {
+      "name": "message.sdk.default-channel",
+      "type": "java.lang.String",
+      "description": "默认渠道",
+      "defaultValue": "tencent"
+    },
+    {
+      "name": "message.sdk.events-enabled",
+      "type": "java.lang.Boolean",
+      "description": "是否启用事件发布",
+      "defaultValue": true
+    },
+    {
+      "name": "message.sdk.logging-enabled",
+      "type": "java.lang.Boolean",
+      "description": "是否启用日志记录",
+      "defaultValue": true
+    },
+    {
+      "name": "message.sms.default-vendor",
+      "type": "java.lang.String",
+      "description": "默认短信厂商",
+      "defaultValue": "tencent"
+    },
+    {
+      "name": "message.sms.tencent.enabled",
+      "type": "java.lang.Boolean",
+      "description": "是否启用腾讯云短信",
+      "defaultValue": true
+    },
+    {
+      "name": "message.sms.tencent.secret-id",
+      "type": "java.lang.String",
+      "description": "腾讯云 SecretId"
+    },
+    {
+      "name": "message.sms.tencent.secret-key",
+      "type": "java.lang.String",
+      "description": "腾讯云 SecretKey"
+    },
+    {
+      "name": "message.sms.tencent.sdk-app-id",
+      "type": "java.lang.String",
+      "description": "腾讯云 SDK AppId"
+    },
+    {
+      "name": "message.sms.tencent.region",
+      "type": "java.lang.String",
+      "description": "腾讯云区域",
+      "defaultValue": "ap-beijing"
+    },
+    {
+      "name": "message.sms.tencent.sign-name",
+      "type": "java.lang.String",
+      "description": "腾讯云短信签名"
+    },
+    {
+      "name": "message.sms.aliyun.enabled",
+      "type": "java.lang.Boolean",
+      "description": "是否启用阿里云短信",
+      "defaultValue": true
+    },
+    {
+      "name": "message.sms.aliyun.access-key-id",
+      "type": "java.lang.String",
+      "description": "阿里云 AccessKeyId"
+    },
+    {
+      "name": "message.sms.aliyun.access-key-secret",
+      "type": "java.lang.String",
+      "description": "阿里云 AccessKeySecret"
+    },
+    {
+      "name": "message.sms.aliyun.sign-name",
+      "type": "java.lang.String",
+      "description": "阿里云短信签名"
+    },
+    {
+      "name": "message.sms.aliyun.region-id",
+      "type": "java.lang.String",
+      "description": "阿里云区域ID",
+      "defaultValue": "cn-hangzhou"
+    }
+  ]
+}

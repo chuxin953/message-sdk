@@ -22,13 +22,12 @@
         <module>message-sdk-api</module>
         <module>message-sdk-common</module>
         <module>message-sdk-sms</module>
-        <module>message-sdk-email</module>
-        <module>message-sdk-push</module>
         <module>message-sdk-samples</module>
         <module>message-sms-tencent</module>
         <module>message-sms-aliyun</module>
         <module>message-sdk-manager</module>
         <module>message-sdk-events</module>
         <module>message-sdk-client</module>
+        <module>message-sdk-spring-boot-starter</module>
     </modules>
 </project>

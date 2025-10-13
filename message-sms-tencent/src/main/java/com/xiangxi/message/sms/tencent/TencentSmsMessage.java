@@ -258,6 +258,15 @@ public class TencentSmsMessage {
             }
             return this;
         }
+
+        public Builder addParams(String[] params) {
+            if (params != null) {
+                for (String param : params) {
+                    addParam(param);
+                }
+            }
+            return this;
+        }
         
         /**
          * 批量添加模板参数（数组形式）

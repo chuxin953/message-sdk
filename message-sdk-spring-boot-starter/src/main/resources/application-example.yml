@@ -1,0 +1,21 @@
+# Message SDK 配置示例
+message:
+  sdk:
+    enabled: true
+    default-type: sms
+    default-channel: tencent
+    events-enabled: true
+    logging-enabled: true
+  
+  # 短信厂商配置
+  sms:
+    default-vendor: tencent  # 默认厂商：tencent 或 aliyun
+    
+    # 腾讯云 SMS 配置
+    tencent:
+      enabled: true
+      secret-id: your-secret-id
+      secret-key: your-secret-key
+      sdk-app-id: your-sdk-app-id
+      region: ap-beijing
+      sign-name: your-sign-name

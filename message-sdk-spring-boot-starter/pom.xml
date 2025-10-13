@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.xiangxi.message</groupId>
+        <artifactId>message-dependencies</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../message-dependencies/pom.xml</relativePath>
+    </parent>
+
+    <artifactId>message-sdk-spring-boot-starter</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>jar</packaging>
+
+    <name>message-sdk-spring-boot-starter</name>
+    <description>Message SDK Spring Boot Starter</description>
+
+    <dependencies>
+        <!-- Spring Boot Starter -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+        
+        <!-- Spring Boot Configuration Processor -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- 核心依赖 - 只保留必要的 -->
+        <dependency>
+            <groupId>com.xiangxi.message</groupId>
+            <artifactId>message-sdk-common</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.xiangxi.message</groupId>
+            <artifactId>message-sdk-sms</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.xiangxi.message</groupId>
+            <artifactId>message-sdk-manager</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.xiangxi.message</groupId>
+            <artifactId>message-sdk-client</artifactId>
+        </dependency>
+
+        <!-- 短信厂商实现 - 这些模块会自动传递依赖 -->
+        <dependency>
+            <groupId>com.xiangxi.message</groupId>
+            <artifactId>message-sms-tencent</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>com.xiangxi.message</groupId>
+            <artifactId>message-sms-aliyun</artifactId>
+        </dependency>
+    </dependencies>
+</project>
