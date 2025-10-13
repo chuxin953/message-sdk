@@ -3,19 +3,14 @@ package com.xiangxi.message.manager;
 
 import com.xiangxi.message.api.MessageSender;
 import com.xiangxi.message.common.exception.MessageSendException;
-import com.xiangxi.message.events.MessageEventPublisher;
-import com.xiangxi.message.events.MessageEventFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.Collections;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-import java.util.UUID;
 
 /**
  * 统一入口
@@ -53,7 +48,6 @@ public class MessageSenderManager {
      */
     private static final Map<String, MessageSender<?,?,?>> senderMap = new ConcurrentHashMap<>();
 
-    private static final MessageEventPublisher event = MessageEventPublisher.getInstance();
     private static final Logger log = LoggerFactory.getLogger(MessageSenderManager.class);
 
 
@@ -118,7 +112,7 @@ public class MessageSenderManager {
     }
 
     /**
-     * 发送消息的便捷方法：根据 type 与 channel 路由到具体实现完成发送，并发布发送成功事件。
+     * 发送消息的便捷方法：根据 type 与 channel 路由到具体实现完成发送。
      *
      * @param type    消息类型
      * @param channel 渠道
@@ -134,39 +128,18 @@ public class MessageSenderManager {
         MessageSender<C, M, R> sender = getSender(type, channel);
         Objects.requireNonNull(config, "config must not be null");
         Objects.requireNonNull(message, "message must not be null");
-        long start = System.nanoTime();
-        String traceId = MDC.get("traceId");
-        if (traceId == null || traceId.isBlank()) {
-            traceId = UUID.randomUUID().toString();
-        }
-        String typeVal = sender.type();
-        String channelVal = sender.channel();
-        // 发布开始事件
-        safePublish(MessageEventFactory.createStartedEvent(typeVal, channelVal, traceId, Collections.emptyMap()));
+        // 简单的调试日志
+        log.debug("Sending message: type={}, channel={}", type, channel);
         try {
             R result = sender.send(config, message);
-            long costMs = elapsedMs(start);
-            safePublish(MessageEventFactory.createSentEvent(sender, typeVal, channelVal, message, result, traceId, costMs));
+            log.debug("Message sent successfully: type={}, channel={}", type, channel);
             return result;
         } catch (MessageSendException e) {
-            long costMs = elapsedMs(start);
-            safePublish(MessageEventFactory.createFailedEvent(sender, typeVal, channelVal, message, e, traceId, costMs));
+            log.warn("Message send failed: type={}, channel={}, error={}", type, channel, e.getMessage());
             throw e;
-        } catch (RuntimeException e) { // 兜底：确保运行时异常也能观测到
-            long costMs = elapsedMs(start);
-            safePublish(MessageEventFactory.createFailedEvent(sender, typeVal, channelVal, message, e, traceId, costMs));
+        } catch (RuntimeException e) {
+            log.warn("Message send failed with runtime exception: type={}, channel={}, error={}", type, channel, e.getMessage());
             throw e;
-        }
-    }
-    private static long elapsedMs(long startNano) {
-        return TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - startNano);
-    }
-
-    private static void safePublish(Object evt) {
-        try {
-            event.publish(evt);
-        } catch (Exception pubEx) {
-            log.warn("Publish event failed: {}", pubEx.getMessage(), pubEx);
         }
     }
 

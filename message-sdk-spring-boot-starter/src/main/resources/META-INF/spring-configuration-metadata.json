@@ -31,18 +31,6 @@
       "defaultValue": "tencent"
     },
     {
-      "name": "message.sdk.events-enabled",
-      "type": "java.lang.Boolean",
-      "description": "是否启用事件发布",
-      "defaultValue": true
-    },
-    {
-      "name": "message.sdk.logging-enabled",
-      "type": "java.lang.Boolean",
-      "description": "是否启用日志记录",
-      "defaultValue": true
-    },
-    {
       "name": "message.sms.default-vendor",
       "type": "java.lang.String",
       "description": "默认短信厂商",

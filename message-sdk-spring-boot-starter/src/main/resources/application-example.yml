@@ -4,8 +4,6 @@ message:
     enabled: true
     default-type: sms
     default-channel: tencent
-    events-enabled: true
-    logging-enabled: true
   
   # 短信厂商配置
   sms:

@@ -25,15 +25,6 @@ public class MessageSdkProperties {
      */
     private String defaultChannel = "tencent";
 
-    /**
-     * 是否启用事件发布
-     */
-    private boolean eventsEnabled = true;
-
-    /**
-     * 是否启用日志记录
-     */
-    private boolean loggingEnabled = true;
 
     // Getters and Setters
     public boolean isEnabled() {
@@ -58,21 +49,5 @@ public class MessageSdkProperties {
 
     public void setDefaultChannel(String defaultChannel) {
         this.defaultChannel = defaultChannel;
-    }
-
-    public boolean isEventsEnabled() {
-        return eventsEnabled;
-    }
-
-    public void setEventsEnabled(boolean eventsEnabled) {
-        this.eventsEnabled = eventsEnabled;
-    }
-
-    public boolean isLoggingEnabled() {
-        return loggingEnabled;
-    }
-
-    public void setLoggingEnabled(boolean loggingEnabled) {
-        this.loggingEnabled = loggingEnabled;
     }
 }

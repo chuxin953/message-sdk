@@ -17,10 +17,6 @@
             <groupId>com.xiangxi.message</groupId>
             <artifactId>message-sdk-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.xiangxi.message</groupId>
-            <artifactId>message-sdk-events</artifactId>
-        </dependency>
     </dependencies>
 
 </project>
