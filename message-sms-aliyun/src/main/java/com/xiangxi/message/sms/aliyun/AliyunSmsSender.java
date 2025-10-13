@@ -13,9 +13,11 @@ import com.xiangxi.message.exception.MessageSendException;
 import com.xiangxi.message.common.validation.ValidationException;
 import com.xiangxi.message.common.validation.Validator;
 import com.xiangxi.message.sms.ISmsSender;
+import com.xiangxi.message.sms.model.SmsRequest;
+import com.xiangxi.message.sms.model.SmsResponse;
 
 /** 阿里云短信发送器（对齐腾讯结构，HTTP直连签名版简化） */
-public class AliyunSmsSender implements ISmsSender<AliyunSmsConfig, AliyunSmsMessage, AliyunSmsApiResponse> {
+public class AliyunSmsSender implements ISmsSender<AliyunSmsConfig> {
 
     private final HttpClient httpClient;
     private static final Gson GSON = new Gson();
@@ -32,7 +34,7 @@ public class AliyunSmsSender implements ISmsSender<AliyunSmsConfig, AliyunSmsMes
     @Override public String channel() { return SmsChannel.ALI_SMS.getChannelName(); }
 
     @Override
-    public AliyunSmsApiResponse send(AliyunSmsConfig config, AliyunSmsMessage message) throws MessageSendException {
+    public SmsResponse send(AliyunSmsConfig config, SmsRequest message) throws MessageSendException {
         try {
             Validator.validate(config);
             Validator.validate(message);
@@ -40,7 +42,8 @@ public class AliyunSmsSender implements ISmsSender<AliyunSmsConfig, AliyunSmsMes
             String payload = GSON.toJson(apiReq);
             HttpRequest request = buildSignedHttpRequest(config, payload);
             ResponseParse<AliyunSmsApiResponse> parser = body -> GSON.fromJson(body, AliyunSmsApiResponse.class);
-            return httpClient.doRequest(request, parser);
+            AliyunSmsApiResponse apiResponse = httpClient.doRequest(request, parser);
+            return convertToSmsResponse(apiResponse);
         } catch (ValidationException e) {
             throw new MessageSendException("参数校验失败: " + e.getMessage(), e, "VALIDATION_ERROR", type(), channel());
         } catch (ClientException e) {
@@ -50,12 +53,37 @@ public class AliyunSmsSender implements ISmsSender<AliyunSmsConfig, AliyunSmsMes
         }
     }
 
-    private AliyunSmsApiRequest buildApiRequest(AliyunSmsConfig config, AliyunSmsMessage msg) {
+
+    private AliyunSmsApiRequest buildApiRequest(AliyunSmsConfig config, SmsRequest msg) {
+        // 将 List<String> 转换为逗号分隔的字符串
+        String phoneNumbersStr = String.join(",", msg.phoneNumbers());
+        
+        // 将 Map<String, String> 转换为 JSON 字符串
+        String templateParamJson = null;
+        if (msg.templateParams() != null && !msg.templateParams().isEmpty()) {
+            templateParamJson = GSON.toJson(msg.templateParams());
+        }
+        
         return new AliyunSmsApiRequest.Builder()
-                .phoneNumbers(msg.getPhoneNumbers())
+                .phoneNumbers(new String[]{msg.getPhoneNumber()})
                 .signName(config.getSignName())
-                .templateCode(msg.getTemplateCode())
-                .templateParam(msg.getTemplateParamJson())
+                .templateCode(msg.templateId())
+                .templateParam(templateParamJson)
+                .build();
+    }
+
+    private SmsResponse convertToSmsResponse(AliyunSmsApiResponse apiResponse) {
+        boolean success = "OK".equals(apiResponse.getCode());
+        
+        return new SmsResponse.Builder()
+                .success(success)
+                .messageId(apiResponse.getRequestId())
+                .errorMessage(success ? null : apiResponse.getMessage())
+                .errorCode(success ? null : apiResponse.getCode())
+                .channel(channel())
+                .messageType(type())
+                .responseTime(System.currentTimeMillis())
+                .sendTime(java.time.LocalDateTime.now())
                 .build();
     }
 
