@@ -32,25 +32,10 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- 核心依赖 - 只保留必要的 -->
-        <dependency>
-            <groupId>com.xiangxi.message</groupId>
-            <artifactId>message-sdk-common</artifactId>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.xiangxi.message</groupId>
-            <artifactId>message-sdk-sms</artifactId>
-        </dependency>
-        
+        <!-- 核心依赖 - 通过传递依赖自动引入其他模块 -->
         <dependency>
             <groupId>com.xiangxi.message</groupId>
             <artifactId>message-sdk-manager</artifactId>
-        </dependency>
-        
-        <dependency>
-            <groupId>com.xiangxi.message</groupId>
-            <artifactId>message-sdk-client</artifactId>
         </dependency>
 
         <!-- 短信厂商实现 - 这些模块会自动传递依赖 -->

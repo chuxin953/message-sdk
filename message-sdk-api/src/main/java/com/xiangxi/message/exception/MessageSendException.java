@@ -1,4 +1,4 @@
-package com.xiangxi.message.common.exception;
+package com.xiangxi.message.exception;
 
 import java.io.Serial;
 

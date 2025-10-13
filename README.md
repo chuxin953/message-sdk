@@ -80,7 +80,7 @@
 
 ```xml
 <dependencies>
-    <!-- 核心依赖 -->
+    <!-- 核心依赖 - 自动传递其他必要模块 -->
     <dependency>
         <groupId>com.xiangxi.message</groupId>
         <artifactId>message-sdk-manager</artifactId>
@@ -191,7 +191,7 @@ import com.xiangxi.message.manager.MessageSenderManager;
 import com.xiangxi.message.common.model.MessageResult;
 import com.xiangxi.message.sms.tencent.TencentSmsConfig;
 import com.xiangxi.message.sms.tencent.TencentSmsMessage;
-import com.xiangxi.message.common.exception.MessageSendException;
+import com.xiangxi.message.exception.MessageSendException;
 
 public class SmsExample {
     public static void main(String[] args) {
@@ -257,7 +257,7 @@ MessageSender<Object, Object, MessageResult> sender =
 ```java
 import com.xiangxi.message.api.MessageSender;
 import com.xiangxi.message.common.model.MessageResult;
-import com.xiangxi.message.common.exception.MessageSendException;
+import com.xiangxi.message.exception.MessageSendException;
 
 @Component
 public class CustomSmsSender implements MessageSender<CustomSmsConfig, CustomSmsMessage, MessageResult> {

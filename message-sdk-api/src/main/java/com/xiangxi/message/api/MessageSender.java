@@ -1,6 +1,6 @@
 package com.xiangxi.message.api;
 
-import com.xiangxi.message.common.exception.MessageSendException;
+import com.xiangxi.message.exception.MessageSendException;
 
 /**
  * 消息发送器核心接口
