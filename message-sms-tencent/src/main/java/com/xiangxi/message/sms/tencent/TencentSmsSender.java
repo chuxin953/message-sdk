@@ -8,13 +8,19 @@ import com.xiangxi.message.client.HttpRequest;
 import com.xiangxi.message.client.enums.HttpContentType;
 import com.xiangxi.message.client.enums.HttpMethod;
 import com.xiangxi.message.common.enums.MessageType;
+import com.xiangxi.message.common.enums.MessageCode;
 import com.xiangxi.message.common.enums.SmsChannel;
-import com.xiangxi.message.exception.MessageSendException;
+import com.xiangxi.message.common.model.MessageSendResult;
 import com.xiangxi.message.common.validation.ValidationException;
 import com.xiangxi.message.common.validation.Validator;
+import com.xiangxi.message.exception.MessageSendException;
 import com.xiangxi.message.sms.ISmsSender;
 import com.xiangxi.message.sms.model.SmsRequest;
 import com.xiangxi.message.sms.model.SmsResponse;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author 初心
@@ -61,7 +67,6 @@ public class TencentSmsSender implements ISmsSender<TencentSmsConfig> {
             // 发送请求并解析响应
             TencentResponseParse<TencentSmsApiResponse> parser = new TencentResponseParse<>(TencentSmsApiResponse.class);
             TencentSmsApiResponse response = httpClient.doRequest(httpRequest, parser);
-
             // 转换为统一响应格式
             long responseTime = System.currentTimeMillis() - startTime;
             return convertToSmsResponse(response, request, responseTime);
@@ -119,27 +124,47 @@ public class TencentSmsSender implements ISmsSender<TencentSmsConfig> {
 
     
     /**
-     * 转换为统一响应格式
+     * 转换为统一响应格式（支持部分成功）
      */
     private SmsResponse convertToSmsResponse(TencentSmsApiResponse apiResponse, SmsRequest request, long responseTime) {
-        if (apiResponse.isSuccess()) {
-            return SmsResponse.success(
-                    apiResponse.getMessageId(),
-                    request.phoneNumbers(),
-                    request.templateId(),
-                    request.templateParams(),
-                    channel(),
-                    responseTime
-            );
-        } else {
-            return SmsResponse.failure(
-                    apiResponse.getErrorMessage(),
-                    apiResponse.getErrorCode(),
-                    request.phoneNumbers(),
-                    request.templateId(),
-                    channel(),
-                    responseTime
-            );
+        if (apiResponse == null || apiResponse.getSendStatusSet() == null) {
+        List<MessageSendResult> results = new ArrayList<>();
+        for (String phone : request.phoneNumbers()) {
+            MessageSendResult r = new MessageSendResult();
+            r.setReceiver(phone);
+            r.setSuccess(false);
+            r.setErrorCode("TENCENT_EMPTY_RESPONSE"); // 可抽为常量
+            r.setErrorMsg("Empty sendStatusSet from Tencent API");
+            r.setSendTime(LocalDateTime.now());
+            results.add(r);
         }
+        return SmsResponse.builder()
+                .rawResponse(apiResponse)
+                .results(results)
+                .requestId(apiResponse != null ? apiResponse.getRequestId() : null)
+                .message(MessageCode.FAILED.getDescription())   // 枚举描述
+                .channel(channel())
+                .code(MessageCode.FAILED.getCode())             // 枚举code
+                .build();
+    }
+
+    // 明细转换（支持部分成功）
+    List<MessageSendResult> results = MessageSendResultConverter.fromTencentSendStatus(apiResponse.getSendStatusSet());
+    boolean anySuccess = results.stream().anyMatch(MessageSendResult::isSuccess);
+    boolean anyFail = results.stream().anyMatch(r -> !r.isSuccess());
+
+    MessageCode finalCode =
+            (anySuccess && anyFail) ? MessageCode.PARTIAL_SUCCESS :
+            (anySuccess)            ? MessageCode.SUCCESS :
+                                      MessageCode.FAILED;
+
+    return SmsResponse.builder()
+            .rawResponse(apiResponse)
+            .results(results)
+            .requestId(apiResponse.getRequestId())
+            .message(finalCode.getDescription())   // 用统一描述
+            .channel(channel())
+            .code(finalCode.getCode())             // 用统一code
+            .build();
     }
 }

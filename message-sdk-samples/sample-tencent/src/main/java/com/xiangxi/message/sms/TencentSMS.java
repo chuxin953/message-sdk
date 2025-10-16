@@ -5,10 +5,8 @@ import com.xiangxi.message.common.enums.MessageType;
 import com.xiangxi.message.common.enums.SmsChannel;
 import com.xiangxi.message.manager.MessageSenderManager;
 import com.xiangxi.message.sms.model.SmsRequest;
-import com.xiangxi.message.sms.tencent.TencentSmsAction;
 import com.xiangxi.message.sms.tencent.TencentSmsApiResponse;
 import com.xiangxi.message.sms.tencent.TencentSmsConfig;
-import com.xiangxi.message.sms.tencent.TencentSmsMessage;
 
 import java.util.Map;
 
@@ -39,8 +37,6 @@ public class TencentSMS {
 
             // 5️⃣ 输出结果
             System.out.println("发送成功: " + response.isSuccess());
-            System.out.println("消息ID: " + response.getMessageId());
-            System.out.println("错误信息: " + response.getErrorMessage());
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -36,49 +36,6 @@ public class TencentSmsApiResponse {
         // 检查所有发送状态是否都成功
         return sendStatusSet.stream().allMatch(status -> "Ok".equals(status.getCode()));
     }
-    
-    /**
-     * 获取消息ID（使用RequestId）
-     * 
-     * @return 消息ID
-     */
-    public String getMessageId() {
-        return requestId;
-    }
-    
-    /**
-     * 获取错误信息
-     * 
-     * @return 错误信息
-     */
-    public String getErrorMessage() {
-        if (sendStatusSet == null || sendStatusSet.isEmpty()) {
-            return "发送状态为空";
-        }
-        // 返回第一个错误信息
-        return sendStatusSet.stream()
-                .filter(status -> !"Ok".equals(status.getCode()))
-                .map(SendStatus::getMessage)
-                .findFirst()
-                .orElse("未知错误");
-    }
-    
-    /**
-     * 获取错误代码
-     * 
-     * @return 错误代码
-     */
-    public String getErrorCode() {
-        if (sendStatusSet == null || sendStatusSet.isEmpty()) {
-            return "EMPTY_STATUS";
-        }
-        // 返回第一个错误代码
-        return sendStatusSet.stream()
-                .filter(status -> !"Ok".equals(status.getCode()))
-                .map(SendStatus::getCode)
-                .findFirst()
-                .orElse("UNKNOWN_ERROR");
-    }
 
 
     public static class SendStatus {

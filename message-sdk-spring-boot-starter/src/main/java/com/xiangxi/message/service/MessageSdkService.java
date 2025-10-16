@@ -2,8 +2,8 @@ package com.xiangxi.message.service;
 
 import com.xiangxi.message.common.enums.MessageType;
 import com.xiangxi.message.common.enums.SmsChannel;
+import com.xiangxi.message.common.model.MessageResponse;
 import com.xiangxi.message.exception.MessageSendException;
-import com.xiangxi.message.common.model.MessageResult;
 import com.xiangxi.message.config.SmsConfigManager;
 import com.xiangxi.message.manager.MessageSenderManager;
 import com.xiangxi.message.sms.tencent.TencentSmsConfig;
@@ -62,7 +62,7 @@ public class MessageSdkService {
      * @return 发送结果
      * @throws MessageSendException 发送失败
      */
-    public MessageResult sendSms(String phoneNumber, String templateId, String[] templateParams) throws MessageSendException {
+    public MessageResponse sendSms(String phoneNumber, String templateId, String[] templateParams) throws MessageSendException {
         String[] enabledVendors = smsConfigManager.getEnabledVendors();
         if (enabledVendors.length == 0) {
             throw new IllegalStateException("没有启用的短信厂商，请检查配置");
@@ -81,7 +81,7 @@ public class MessageSdkService {
      * @return 发送结果
      * @throws MessageSendException 发送失败
      */
-    public MessageResult sendSms(String vendor, String phoneNumber, String templateId, String[] templateParams) throws MessageSendException {
+    public MessageResponse sendSms(String vendor, String phoneNumber, String templateId, String[] templateParams) throws MessageSendException {
         if (!isVendorSupported(vendor)) {
             throw new IllegalArgumentException("Unsupported vendor: " + vendor + ". Supported vendors: " + String.join(", ", getSupportedVendors()));
         }
@@ -103,7 +103,7 @@ public class MessageSdkService {
      * @return 发送结果
      * @throws MessageSendException 发送失败
      */
-    public MessageResult sendTencentSms(String phoneNumber, String templateId, String[] templateParams) throws MessageSendException {
+    public MessageResponse sendTencentSms(String phoneNumber, String templateId, String[] templateParams) throws MessageSendException {
         if (!smsConfigManager.isVendorEnabled(TENCENT_CHANNEL)) {
             throw new IllegalStateException("腾讯云 SMS 未启用，请在配置中启用");
         }

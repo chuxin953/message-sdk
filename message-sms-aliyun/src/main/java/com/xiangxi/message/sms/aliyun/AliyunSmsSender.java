@@ -8,6 +8,7 @@ import com.xiangxi.message.client.ResponseParse;
 import com.xiangxi.message.client.enums.HttpContentType;
 import com.xiangxi.message.client.enums.HttpMethod;
 import com.xiangxi.message.common.enums.MessageType;
+import com.xiangxi.message.common.enums.MessageCode;
 import com.xiangxi.message.common.enums.SmsChannel;
 import com.xiangxi.message.exception.MessageSendException;
 import com.xiangxi.message.common.validation.ValidationException;
@@ -74,16 +75,15 @@ public class AliyunSmsSender implements ISmsSender<AliyunSmsConfig> {
 
     private SmsResponse convertToSmsResponse(AliyunSmsApiResponse apiResponse) {
         boolean success = "OK".equals(apiResponse.getCode());
-        
-        return new SmsResponse.Builder()
-                .success(success)
-                .messageId(apiResponse.getRequestId())
-                .errorMessage(success ? null : apiResponse.getMessage())
-                .errorCode(success ? null : apiResponse.getCode())
+        String code = success ? MessageCode.SUCCESS.name() : MessageCode.FAILED.name();
+
+        return SmsResponse.builder()
+                .rawResponse(apiResponse)
+                .results(null)
+                .requestId(apiResponse.getRequestId())
+                .message(success ? "消息发送成功" : apiResponse.getMessage())
                 .channel(channel())
-                .messageType(type())
-                .responseTime(System.currentTimeMillis())
-                .sendTime(java.time.LocalDateTime.now())
+                .code(code)
                 .build();
     }
 
