@@ -8,9 +8,38 @@ import java.time.Duration;
 import java.util.*;
 
 /**
- * 统一的 HTTP 请求模型。
+ * 统一的 HTTP 请求模型
+ * <p>
+ * 用于构建 HTTP 请求，支持 GET、POST、PUT、DELETE、PATCH、HEAD 等方法，
+ * 以及 JSON、表单、文件上传、查询参数等功能。
+ * </p>
  *
- * 用于上层构建与网关交互的请求数据，配合适配器转换为底层客户端请求。
+ * <p>使用示例：</p>
+ * <pre>{@code
+ * // GET 请求
+ * HttpRequest getRequest = HttpRequest.builder("https://api.example.com/data")
+ *     .method(HttpMethod.GET)
+ *     .queryParam("page", "1")
+ *     .queryParam("size", "10")
+ *     .build();
+ *
+ * // POST JSON 请求
+ * HttpRequest postRequest = HttpRequest.builder("https://api.example.com/users")
+ *     .method(HttpMethod.POST)
+ *     .contentType(HttpContentType.JSON)
+ *     .body("{\"name\":\"John\",\"age\":30}")
+ *     .build();
+ *
+ * // 表单提交
+ * HttpRequest formRequest = HttpRequest.builder("https://api.example.com/submit")
+ *     .method(HttpMethod.POST)
+ *     .formField("username", "admin")
+ *     .formField("password", "secret")
+ *     .build();
+ * }</pre>
+ *
+ * @author message-sdk
+ * @since 1.0.0
  */
 public class HttpRequest {
     // 请求地址（可以是绝对URL或相对路径）
@@ -215,7 +244,7 @@ public class HttpRequest {
          *
          * @param url 请求URL
          * @return 建造者实例
-         * @throws IllegalArgumentException 如果URL为空
+         * @throws IllegalArgumentException 如果URL为空或格式无效
          */
         public Builder url(String url) {
             this.url = Objects.requireNonNull(url, "URL不能为空");
@@ -350,7 +379,7 @@ public class HttpRequest {
          * @param field 字段名
          * @param file 文件
          * @return 建造者实例
-         * @throws IllegalArgumentException 如果字段名为空或文件为空
+         * @throws IllegalArgumentException 如果字段名为空、文件为空、文件不存在或不是文件
          */
         public Builder file(String field, File file) {
             Objects.requireNonNull(field, "文件字段名不能为空");
@@ -358,6 +387,14 @@ public class HttpRequest {
 
             if (field.trim().isEmpty()) {
                 throw new IllegalArgumentException("文件字段名不能为空字符串");
+            }
+
+            // 验证文件
+            if (!file.exists()) {
+                throw new IllegalArgumentException("文件不存在: " + file.getAbsolutePath());
+            }
+            if (!file.isFile()) {
+                throw new IllegalArgumentException("不是文件: " + file.getAbsolutePath());
             }
 
             if (this.files == null) {

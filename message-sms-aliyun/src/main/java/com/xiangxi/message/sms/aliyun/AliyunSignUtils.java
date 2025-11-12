@@ -53,7 +53,7 @@ final class AliyunSignUtils {
 
     static String percentEncode(String s) {
         try {
-            return URLEncoder.encode(s, "UTF-8").replace("+", "%20").replace("*", "%2A").replace("%7E", "~");
+            return URLEncoder.encode(s, StandardCharsets.UTF_8).replace("+", "%20").replace("*", "%2A").replace("%7E", "~");
         } catch (Exception e) { return s; }
     }
 
