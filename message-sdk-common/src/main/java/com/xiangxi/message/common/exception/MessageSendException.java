@@ -1,4 +1,4 @@
-package com.xiangxi.message.exception;
+package com.xiangxi.message.common.exception;
 
 import java.io.Serial;
 
@@ -10,7 +10,7 @@ import java.io.Serial;
  *
  * <p>错误上下文约定：</p>
  * <ul>
- *   <li>errorCode：统一错误码，建议使用“供应商域前缀 + 语义”，如 TENCENT_SDK_ERROR / VALIDATION_ERROR / UNEXPECTED_ERROR；</li>
+ *   <li>errorCode：统一错误码，建议使用"供应商域前缀 + 语义"，如 TENCENT_SDK_ERROR / VALIDATION_ERROR / UNEXPECTED_ERROR；</li>
  *   <li>messageType：消息类型（如 SMS/EMAIL/PUSH），便于聚合统计；</li>
  *   <li>channel：渠道编码（如 TENCENT_SMS/ALI_SMS），便于快速定位实现与配置；</li>
  * </ul>

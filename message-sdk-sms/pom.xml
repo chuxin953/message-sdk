@@ -20,7 +20,7 @@
         </dependency>
         <dependency>
             <groupId>com.xiangxi.message</groupId>
-            <artifactId>message-sdk-client</artifactId>
+            <artifactId>message-sdk-common</artifactId>
         </dependency>
     </dependencies>
 </project>

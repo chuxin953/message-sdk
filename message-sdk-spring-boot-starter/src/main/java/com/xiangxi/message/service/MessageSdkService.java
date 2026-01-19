@@ -3,7 +3,7 @@ package com.xiangxi.message.service;
 import com.xiangxi.message.common.enums.MessageType;
 import com.xiangxi.message.common.enums.SmsChannel;
 import com.xiangxi.message.common.model.MessageResponse;
-import com.xiangxi.message.exception.MessageSendException;
+import com.xiangxi.message.common.exception.MessageSendException;
 import com.xiangxi.message.config.SmsConfigManager;
 import com.xiangxi.message.manager.MessageSenderManager;
 import com.xiangxi.message.sms.tencent.TencentSmsConfig;

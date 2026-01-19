@@ -18,6 +18,10 @@
             <groupId>com.xiangxi.message</groupId>
             <artifactId>message-sdk-sms</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.xiangxi.message</groupId>
+            <artifactId>message-sdk-client</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

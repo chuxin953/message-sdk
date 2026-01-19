@@ -2,7 +2,7 @@ package com.xiangxi.message.manager;
 
 
 import com.xiangxi.message.api.MessageSender;
-import com.xiangxi.message.exception.MessageSendException;
+import com.xiangxi.message.common.exception.MessageSendException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

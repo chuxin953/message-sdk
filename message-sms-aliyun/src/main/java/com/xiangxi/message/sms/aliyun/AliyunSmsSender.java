@@ -10,7 +10,7 @@ import com.xiangxi.message.client.enums.HttpMethod;
 import com.xiangxi.message.common.enums.MessageType;
 import com.xiangxi.message.common.enums.MessageCode;
 import com.xiangxi.message.common.enums.SmsChannel;
-import com.xiangxi.message.exception.MessageSendException;
+import com.xiangxi.message.common.exception.MessageSendException;
 import com.xiangxi.message.common.validation.ValidationException;
 import com.xiangxi.message.common.validation.Validator;
 import com.xiangxi.message.sms.ISmsSender;
