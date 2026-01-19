@@ -86,7 +86,7 @@ public interface MessageSender<C, M, R> {
      * @param config 发送配置，包含API密钥、服务器地址等渠道特定信息，不能为null
      * @param message 消息内容，包含接收者、消息体等信息，不能为null
      * @return 发送结果，包含成功状态、消息ID、错误信息等
-     * @throws MessageSendException 当消息发送失败时抛出，包含详细的错误信息
+     * @throws com.xiangxi.message.common.exception.MessageSendException 当消息发送失败时抛出，包含详细的错误信息
      * @throws IllegalArgumentException 当参数为null或无效时抛出
      */
     R send(C config, M message) throws MessageSendException;

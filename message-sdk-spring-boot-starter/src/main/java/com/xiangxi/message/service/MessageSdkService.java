@@ -60,7 +60,7 @@ public class MessageSdkService {
      * @param templateId 模板ID
      * @param templateParams 模板参数
      * @return 发送结果
-     * @throws MessageSendException 发送失败
+     * @throws com.xiangxi.message.common.exception.MessageSendException 发送失败
      */
     public MessageResponse sendSms(String phoneNumber, String templateId, String[] templateParams) throws MessageSendException {
         String[] enabledVendors = smsConfigManager.getEnabledVendors();
@@ -79,7 +79,7 @@ public class MessageSdkService {
      * @param templateId 模板ID
      * @param templateParams 模板参数
      * @return 发送结果
-     * @throws MessageSendException 发送失败
+     * @throws com.xiangxi.message.common.exception.MessageSendException 发送失败
      */
     public MessageResponse sendSms(String vendor, String phoneNumber, String templateId, String[] templateParams) throws MessageSendException {
         if (!isVendorSupported(vendor)) {
@@ -101,7 +101,7 @@ public class MessageSdkService {
      * @param templateId 模板ID
      * @param templateParams 模板参数
      * @return 发送结果
-     * @throws MessageSendException 发送失败
+     * @throws com.xiangxi.message.common.exception.MessageSendException 发送失败
      */
     public MessageResponse sendTencentSms(String phoneNumber, String templateId, String[] templateParams) throws MessageSendException {
         if (!smsConfigManager.isVendorEnabled(TENCENT_CHANNEL)) {

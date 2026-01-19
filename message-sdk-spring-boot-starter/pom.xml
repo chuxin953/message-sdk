@@ -37,6 +37,12 @@
             <groupId>com.xiangxi.message</groupId>
             <artifactId>message-sdk-manager</artifactId>
         </dependency>
+        
+        <!-- 显式声明 common 依赖，确保异常类可用 -->
+        <dependency>
+            <groupId>com.xiangxi.message</groupId>
+            <artifactId>message-sdk-common</artifactId>
+        </dependency>
 
         <!-- 短信厂商实现 - 这些模块会自动传递依赖 -->
         <dependency>

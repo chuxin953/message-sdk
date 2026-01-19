@@ -20,6 +20,10 @@
         </dependency>
         <dependency>
             <groupId>com.xiangxi.message</groupId>
+            <artifactId>message-sdk-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.xiangxi.message</groupId>
             <artifactId>message-sdk-client</artifactId>
         </dependency>
     </dependencies>
